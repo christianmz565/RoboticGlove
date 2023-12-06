@@ -4,6 +4,6 @@ public class SettingsButton : MonoBehaviour, BaseButton
 {
     public void OnInteract()
     {
-        SceneChanger.ChangeScene(this, "Settings Menu");
+        StartCoroutine(SceneChanger.ChangeScene("Settings Menu"));
     }
 }

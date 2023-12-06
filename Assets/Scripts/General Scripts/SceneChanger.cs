@@ -1,20 +1,16 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class SceneChanger
 {
-    static GameObject fade = GameObject.Find("Fade");
-    public static void ChangeScene(MonoBehaviour instance, string scene)
+    private static GameObject fade;
+    public static IEnumerator ChangeScene(string scene)
     {
-        fade.GetComponent<Animator>().SetTrigger("Enter");
-        instance.StartCoroutine(Load(scene));
-    }
-
-    static IEnumerator Load(string scene)
-    {
-        yield return new WaitForSeconds(0.5f);
+        fade = GameObject.Find("Fade");
+        fade.GetComponent<Animator>().SetTrigger("Fading");
+        yield return new WaitUntil(() => fade.GetComponent<Image>().color.a == 1);
         SceneManager.LoadScene(scene);
-        fade.GetComponent<Animator>().SetTrigger("Leave");
     }
 }

@@ -1,5 +1,5 @@
 public static class GameSettings
 {
-    public const float LINE_COLLIDER_PERCENTAGE = 0.8f;
-    public static string level = "1";
+    public static string Level = "1";
+    public static float ColliderOffsetScale = 0.5f;
 }

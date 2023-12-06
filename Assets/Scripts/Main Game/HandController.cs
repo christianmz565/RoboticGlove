@@ -3,13 +3,15 @@ using UnityEngine;
 public class HandController : MonoBehaviour
 {
     [SerializeField] private Sprite[] sprites;
-    private Collider2D objectCollider;
+    [SerializeField] private NodeGrid nodeGrid;
+    private NodeController pickedNode;
+    private Vector2 previousNodePos;
     private bool isHolding = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
 
@@ -22,13 +24,13 @@ public class HandController : MonoBehaviour
     void Check()
     {
         float mult = 10 * Mathf.Pow(0.9f, PlayerPrefs.GetInt("cursorSensitivity"));
-        if (Input.GetKey(KeyCode.A))
+        if (Input.GetKey(KeyCode.LeftArrow))
             transform.Translate(Vector2.left * Time.deltaTime * mult);
-        if (Input.GetKey(KeyCode.W))
+        if (Input.GetKey(KeyCode.UpArrow))
             transform.Translate(Vector2.up * Time.deltaTime * mult);
-        if (Input.GetKey(KeyCode.S))
+        if (Input.GetKey(KeyCode.DownArrow))
             transform.Translate(Vector2.down * Time.deltaTime * mult);
-        if (Input.GetKey(KeyCode.D))
+        if (Input.GetKey(KeyCode.RightArrow))
             transform.Translate(Vector2.right * Time.deltaTime * mult);
         if (Input.GetKeyDown(KeyCode.Space))
             StartHold();
@@ -38,19 +40,14 @@ public class HandController : MonoBehaviour
 
     void StartHold()
     {
-        RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, 0.25f, Vector2.zero, 0);
-        foreach (RaycastHit2D hit in hits)
+        Vector2 nodePos = nodeGrid.RealToRelativePosition(new Vector2(transform.position.x, transform.position.y));
+        NodeController node = nodeGrid.GetNode(nodePos);
+        if (node != null)
         {
-            if (hit.collider.name == "Object")
-            {
-                objectCollider = hit.collider;
-                break;
-            }
-        }
-        if (objectCollider)
-        {
+            previousNodePos = nodePos;
             isHolding = true;
-            objectCollider.GetComponent<ObjectController>().isHeld = true;
+            node.StartHold();
+            pickedNode = node;
             GetComponent<SpriteRenderer>().sprite = sprites[0];
         }
     }
@@ -60,9 +57,11 @@ public class HandController : MonoBehaviour
         if (isHolding)
         {
             isHolding = false;
-            objectCollider.GetComponent<ObjectController>().isHeld = false;
+            pickedNode.EndHold();
+            Vector2 newNodePos = nodeGrid.RealToRelativePosition(new Vector2(transform.position.x, transform.position.y));
+            nodeGrid.UpdateNode(pickedNode, previousNodePos, newNodePos);
+            pickedNode = null;
             GetComponent<SpriteRenderer>().sprite = sprites[1];
-            objectCollider = null;
         }
     }
 }

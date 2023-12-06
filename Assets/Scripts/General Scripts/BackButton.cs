@@ -4,6 +4,6 @@ public class BackButton : MonoBehaviour, BaseButton
 {
     public void OnInteract()
     {
-        SceneChanger.ChangeScene(this, "Main Menu");
+        StartCoroutine(SceneChanger.ChangeScene("Main Menu"));
     }
 }

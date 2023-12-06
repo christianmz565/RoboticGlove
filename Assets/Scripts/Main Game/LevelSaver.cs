@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class LevelSaver : MonoBehaviour
 {
-    [SerializeField] private Transform[] objectTransforms;
-    [SerializeField] private GameObject[] lines;
+    [SerializeField] private NodeController[] nodes;
+    [SerializeField] private EdgeController[] edges;
     private Level level;
 
     // Start is called before the first frame update
@@ -18,17 +18,17 @@ public class LevelSaver : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.L))
         {
-            Vector2[] objectPositions = new Vector2[objectTransforms.Length];
-            int[] linesIdx1 = new int[lines.Length];
-            int[] linesIdx2 = new int[lines.Length];
-            for (int i = 0; i < objectTransforms.Length; i++)
-                objectPositions[i] = objectTransforms[i].position;
-            for (int i = 0; i < lines.Length; i++)
+            Vector2[] nodePositions = new Vector2[nodes.Length];
+            Vector2Int[] edgeNodes = new Vector2Int[edges.Length];
+            for (int i = 0; i < nodes.Length; i++)
             {
-                linesIdx1[i] = lines[i].GetComponent<LineController>().object1Idx;
-                linesIdx2[i] = lines[i].GetComponent<LineController>().object2Idx;
+                nodePositions[i] = new Vector2(nodes[i].transform.position.x, nodes[i].transform.position.y);
             }
-            level = new Level(objectPositions, linesIdx1, linesIdx2);
+            for (int i = 0; i < edges.Length; i++)
+            {
+                edgeNodes[i] = new Vector2Int(edges[i].node1Idx, edges[i].node2Idx);
+            }
+            level = new Level(nodePositions, edgeNodes);
         }
         if (Input.GetKeyDown(KeyCode.P))
         {

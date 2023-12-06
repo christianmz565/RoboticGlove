@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -7,29 +8,32 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        StartCoroutine(CheckWin());
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!hasWon)
-            CheckWin();
     }
 
-    void CheckWin()
+    IEnumerator CheckWin()
     {
-        hasWon = true;
-        for (int i = 0; i < linesParent.childCount; i++)
+        while (!hasWon)
         {
-            if (!linesParent.GetChild(i).GetComponent<LineController>().isCleared)
+            yield return new WaitForSeconds(1);
+            hasWon = true;
+            for (int i = 0; i < linesParent.childCount; i++)
             {
-                hasWon = false;
-                break;
+                if (!linesParent.GetChild(i).GetComponent<EdgeController>().isCleared)
+                {
+                    Debug.Log("didnt pass");
+                    hasWon = false;
+                    break;
+                }
             }
+            if (hasWon)
+                StartCoroutine(SceneChanger.ChangeScene("Levels Menu"));
         }
-        if (hasWon)
-            SceneChanger.ChangeScene(this, "Levels Menu");
     }
 
     /*void CheckWinOld()
