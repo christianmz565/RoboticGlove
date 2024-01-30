@@ -1,12 +1,12 @@
-using TMPro;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class CanvasController : MonoBehaviour
 {
-    [SerializeField] private TMP_Text resolutionText;
-    [SerializeField] private TMP_Text fullscreenText;
-    [SerializeField] private TMP_Text volumeText;
-    [SerializeField] private TMP_Text sensitivityText;
+    [SerializeField] private Text resolutionText;
+    [SerializeField] private Text fullscreenText;
+    [SerializeField] private Text volumeText;
+    [SerializeField] private Text sensitivityText;
 
     // Start is called before the first frame update
     void Start()

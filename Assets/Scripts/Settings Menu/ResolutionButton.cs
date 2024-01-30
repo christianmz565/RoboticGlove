@@ -1,17 +1,12 @@
-using TMPro;
+using UnityEngine.UI;
 using UnityEngine;
 
-public class ResolutionButton : MonoBehaviour, BaseButton
+public class ResolutionButton : BaseButton
 {
-    [SerializeField] private TMP_Text resolutionText;
+    [SerializeField] private Text resolutionText;
     [SerializeField] private int direction;
 
-    void Start()
-    {
-
-    }
-
-    public void OnInteract()
+    public override void InteractAction()
     {
         Vector2[] resolutionsList = SettingsManager.resolutionsList;
         int resolutionIndex = PlayerPrefs.GetInt("resolutionIndex");

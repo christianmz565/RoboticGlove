@@ -1,16 +1,12 @@
-using TMPro;
+using UnityEngine.UI;
 using UnityEngine;
 
-public class SensitivityButton : MonoBehaviour, BaseButton
+public class SensitivityButton : BaseButton
 {
-    [SerializeField] private TMP_Text sensitivityText;
+    [SerializeField] private Text sensitivityText;
     [SerializeField] private int direction;
 
-    void Start()
-    {
-    }
-
-    public void OnInteract()
+    public override void InteractAction()
     {
         int sensitivity = PlayerPrefs.GetInt("cursorSensitivity");
         switch (direction)

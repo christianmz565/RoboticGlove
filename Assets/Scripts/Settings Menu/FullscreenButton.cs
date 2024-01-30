@@ -1,16 +1,11 @@
-using TMPro;
+using UnityEngine.UI;
 using UnityEngine;
 
-public class fullScreen : MonoBehaviour, BaseButton
+public class FullScreenButton : BaseButton
 {
-    [SerializeField] private TMP_Text fullscreenText;
+    [SerializeField] private Text fullscreenText;
 
-    void Start()
-    {
-
-    }
-
-    public void OnInteract()
+    public override void InteractAction()
     {
         int previous = PlayerPrefs.GetInt("fullscreen");
         bool current = !IntToBool(previous);
@@ -30,4 +25,6 @@ public class fullScreen : MonoBehaviour, BaseButton
     {
         return b ? 1 : 0;
     }
+
+    
 }

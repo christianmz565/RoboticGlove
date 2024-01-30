@@ -1,16 +1,12 @@
-using TMPro;
+using UnityEngine.UI;
 using UnityEngine;
 
-public class VolumeButton : MonoBehaviour, BaseButton
+public class VolumeButton : BaseButton
 {
-    [SerializeField] private TMP_Text volumeText;
+    [SerializeField] private Text volumeText;
     [SerializeField] private int direction;
 
-    void Start()
-    {
-    }
-
-    public void OnInteract()
+    public override void InteractAction()
     {
         int volume = PlayerPrefs.GetInt("volume");
         switch (direction)
@@ -34,8 +30,8 @@ public class VolumeButton : MonoBehaviour, BaseButton
                 volume += 10;
                 break;
         }
-        PlayerPrefs.SetInt("volume", volume);
         volume = Mathf.Clamp(volume, 0, 100);
+        PlayerPrefs.SetInt("volume", volume);
         Debug.Log("Volume changed to " + volume);
         volumeText.text = volume + "%";
         PlayerPrefs.Save();

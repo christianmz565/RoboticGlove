@@ -1,10 +1,10 @@
 using UnityEngine;
 
-public class LevelButton : MonoBehaviour, BaseButton
+public class LevelButton : BaseButton
 {
-    public void OnInteract()
+    public override void InteractAction()
     {
-        GameSettings.Level = name;
-        StartCoroutine(SceneChanger.ChangeScene("Main Game"));
+        GameSettings.Level = transform.parent.name;
+        StartCoroutine(SceneChanger.ChangeScene("Main Game " + GameSettings.Game));
     }
 }

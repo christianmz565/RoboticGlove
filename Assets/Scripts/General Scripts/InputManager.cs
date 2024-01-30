@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
+    BaseButton button = null;
 
     // Start is called before the first frame update
     void Start()
@@ -25,8 +26,11 @@ public class InputManager : MonoBehaviour
             transform.Translate(Vector2.down * Time.deltaTime * mult);
         if (Input.GetKey(KeyCode.D))
             transform.Translate(Vector2.right * Time.deltaTime * mult);
+
         if (Input.GetKeyDown(KeyCode.Space))
             ButtonInteract();
+        if (Input.GetKeyUp(KeyCode.Space))
+            ButtonEndInteract();
     }
 
     void ButtonInteract()
@@ -37,6 +41,18 @@ public class InputManager : MonoBehaviour
         Debug.DrawLine(transform.position, (Vector2)transform.position + Vector2.down / 4, Color.green, 1);
         Debug.DrawLine(transform.position, (Vector2)transform.position + Vector2.left / 4, Color.green, 1);
         if (hit)
-            hit.collider.GetComponent<BaseButton>().OnInteract();
+        {
+            button = hit.collider.GetComponent<BaseButton>();
+            button.StartInteract();
+        }
+    }
+
+    void ButtonEndInteract()
+    {
+        if (button != null)
+        {
+            button.EndInteract();
+            button = null;
+        }
     }
 }

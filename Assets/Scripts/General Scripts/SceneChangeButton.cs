@@ -1,10 +1,10 @@
 using UnityEngine;
 
-public class SceneChangeButton : MonoBehaviour, BaseButton
+public class SceneChangeButton : BaseButton
 {
     [SerializeField] private string sceneTo;
 
-    public void OnInteract()
+    public override void InteractAction()
     {
         StartCoroutine(SceneChanger.ChangeScene(sceneTo));
     }
