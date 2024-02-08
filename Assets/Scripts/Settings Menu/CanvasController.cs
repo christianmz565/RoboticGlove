@@ -26,7 +26,7 @@ public class CanvasController : MonoBehaviour
         Vector2[] resolutionsList = SettingsManager.resolutionsList;
         Vector2 resolution = resolutionsList[PlayerPrefs.GetInt("resolutionIndex")];
         resolutionText.text = resolution.x + "x" + resolution.y;
-        fullscreenText.text = PlayerPrefs.GetInt("fullscreen") == 1 ? "Sí" : "No";
+        fullscreenText.text = PlayerPrefs.GetInt("fullscreen") == 1 ? "SI" : "NO";
         volumeText.text = PlayerPrefs.GetInt("volume") + "%";
         sensitivityText.text = PlayerPrefs.GetInt("cursorSensitivity") + "";
     }

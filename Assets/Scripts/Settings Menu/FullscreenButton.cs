@@ -11,7 +11,7 @@ public class FullScreenButton : BaseButton
         bool current = !IntToBool(previous);
         PlayerPrefs.SetInt("fullscreen", BoolToInt(current));
         Debug.Log("fullscreen: " + current);
-        fullscreenText.text = current ? "Sí" : "No";
+        fullscreenText.text = current ? "SI" : "NO";
         Screen.fullScreen = current;
         PlayerPrefs.Save();
     }
