@@ -6,11 +6,14 @@ public class NodeController : MonoBehaviour
     public List<EdgeController> edges;
     private bool isHeld;
     private GameObject handPlayer;
+    private AudioSource pickAudio;
 
     // Start is called before the first frame update
     void Start()
     {
         handPlayer = GameObject.Find("Hand");
+        pickAudio = GetComponent<AudioSource>(); 
+        pickAudio.volume = PlayerPrefs.GetInt("volume") / 100.0f;
     }
 
     // Update is called once per frame
@@ -27,14 +30,18 @@ public class NodeController : MonoBehaviour
     public void StartHold()
     {
         isHeld = true;
+        transform.localScale = new Vector3(1.5f, 1.5f, 1);
         SetEdgesStatus(true);
+        pickAudio.Play();
     }
 
     public void EndHold()
     {
         isHeld = false;
+        transform.localScale = new Vector3(1, 1, 1);
         SetEdgesStatus(false);
         UpdateEdges();
+        pickAudio.Play();
     }
 
     public void UpdateEdges()
@@ -48,6 +55,4 @@ public class NodeController : MonoBehaviour
         foreach (EdgeController edge in edges)
             edge.areNodesHeld = held;
     }
-
-
 }

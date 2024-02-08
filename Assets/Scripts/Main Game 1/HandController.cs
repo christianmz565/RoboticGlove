@@ -4,6 +4,7 @@ public class HandController : MonoBehaviour
 {
     [SerializeField] private Sprite[] sprites;
     [SerializeField] private NodeGrid nodeGrid;
+    private AudioSource pullAudio;
     private NodeController pickedNode;
     private Vector2 previousNodePos;
     private bool isHolding = false;
@@ -11,7 +12,8 @@ public class HandController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        pullAudio = GetComponent<AudioSource>();
+        pullAudio.volume = PlayerPrefs.GetInt("volume") / 100.0f;
     }
 
 
@@ -24,18 +26,38 @@ public class HandController : MonoBehaviour
     void Check()
     {
         float mult = 10 * Mathf.Pow(0.9f, PlayerPrefs.GetInt("cursorSensitivity"));
+        Vector2 direction = Vector2.zero;
+
         if (Input.GetKey(KeyCode.LeftArrow))
-            transform.Translate(Vector2.left * Time.deltaTime * mult);
+            direction += Vector2.left;
         if (Input.GetKey(KeyCode.UpArrow))
-            transform.Translate(Vector2.up * Time.deltaTime * mult);
+            direction += Vector2.up;
         if (Input.GetKey(KeyCode.DownArrow))
-            transform.Translate(Vector2.down * Time.deltaTime * mult);
+            direction += Vector2.down;
         if (Input.GetKey(KeyCode.RightArrow))
-            transform.Translate(Vector2.right * Time.deltaTime * mult);
+            direction += Vector2.right;
+
+        MoveAndPlayAudio(direction * Time.deltaTime * mult);
+
         if (Input.GetKeyDown(KeyCode.Space))
             StartHold();
         if (Input.GetKeyUp(KeyCode.Space))
             EndHold();
+    }
+
+    void MoveAndPlayAudio(Vector2 direction)
+    {
+        if (!isHolding || direction == Vector2.zero)
+        {
+            pullAudio.loop = false;
+        }
+        else if (isHolding && !pullAudio.isPlaying)
+        {
+            pullAudio.loop = true;
+            pullAudio.Play();
+        }
+
+        transform.Translate(direction);
     }
 
     void StartHold()

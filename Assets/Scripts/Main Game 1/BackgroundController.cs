@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class BackgroundController : MonoBehaviour
 {
-    [SerializeField] Material[] backgrounds;
+    [SerializeField] Sprite[] backgrounds;
 
     void Start()
     {
-        GetComponent<MeshRenderer>().material = backgrounds[Random.Range(0, backgrounds.Length)];
+        GetComponent<SpriteRenderer>().sprite = backgrounds[Random.Range(0, backgrounds.Length)];
     }
 }
