@@ -3303,7 +3303,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   percentageText: {fileID: 777562665}
-  passPref: {fileID: 6637750607922195915, guid: 8fdca34158b2bb74f887f4e54c8f2eed, type: 3}
   notPassPref: {fileID: 6637750607922195915, guid: a3667ed4e0302094187b0d03cf7071a1, type: 3}
   treePrefs:
   - {fileID: 478644427939314172, guid: 0a0d01f1a3c1fe244bbb425de6d8afda, type: 3}
@@ -3312,7 +3311,7 @@ MonoBehaviour:
   - {fileID: 5078968057808439563, guid: 78b1455891118f746b9f6ec31e367de9, type: 3}
   - {fileID: 9091430437060117058, guid: 8ef70a9ca52b8054692dbbae5f495837, type: 3}
   - {fileID: 76739821526105447, guid: 60abcb424a48a32418ef6a08bfe065ee, type: 3}
-  obstaclePref: {fileID: 2073772929201981598, guid: cff038a06b79f2f4b84ba083b9d64dca, type: 3}
+  obstaclePref: {fileID: 2073772929201981598, guid: 1986c2691aa0f8044bfb470dd3e5fb42, type: 3}
   extraPref: {fileID: 7917649008909373286, guid: 0ad97d5314cf4f94993ba387d6c3cd20, type: 3}
   player: {fileID: 2135710904}
   objectParent: {fileID: 336143185}

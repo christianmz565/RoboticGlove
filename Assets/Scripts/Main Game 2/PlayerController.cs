@@ -76,7 +76,7 @@ public class PlayerController : MonoBehaviour
 
     public void Score()
     {
-        score += 10;
+        score += 100;
         scoreText.text = "Puntaje\n" + score;
     }
 }

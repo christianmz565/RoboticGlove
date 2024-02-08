@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class LevelController : MonoBehaviour
 {
     [SerializeField] private Text percentageText;
-    [SerializeField] private GameObject passPref;
     [SerializeField] private GameObject notPassPref;
     [SerializeField] private GameObject[] treePrefs;
     [SerializeField] private GameObject obstaclePref;
@@ -60,12 +59,6 @@ public class LevelController : MonoBehaviour
                     float scale = GameSettings.ScrollSpeed * GameSettings.DurationScaleMult * float.Parse(args[3]);
                     float colliderScale = (scale - 2) * 100;
                     float posY = 7 + scale / 2;
-                    GameObject instPass = Instantiate(passPref, new Vector2(posX, posY), Quaternion.identity, objectParent);
-                    instPass.transform.localScale = new Vector2(1.5f, scale);
-                    float currentSize = instPass.GetComponent<MeshRenderer>().bounds.size.y;
-                    float newSize = currentSize - 1.5f;
-                    float ratio = newSize / currentSize;
-                    instPass.GetComponent<BoxCollider2D>().size = new Vector2(1, Mathf.Max(0.25f, ratio));
 
                     for (int col = 0; col < 4; col++)
                     {
@@ -73,24 +66,24 @@ public class LevelController : MonoBehaviour
                         {
                             float colX = -width / 2 + col * width / 3;
                             GameObject instNotPass = Instantiate(notPassPref, new Vector2(colX, posY), Quaternion.identity, objectParent);
-                            float height = currentSize * 2.5f;
+                            float height = scale * 2.5f;
                             instNotPass.GetComponent<SpriteRenderer>().size = new Vector2(10.3f, height);
                             instNotPass.GetComponent<BoxCollider2D>().size = new Vector2(2.5f, height);
 
-                            int maxTrees = (int)(currentSize / 2.5f);
+                            int maxTrees = (int)(scale / 1.5f);
                             for (int tree = 0; tree < maxTrees; tree++)
                             {
                                 float var = Random.Range(-1f, 1f);
                                 float treeX = colX + var;
-                                float treeY = 9 + 2.5f * tree;
-                                Instantiate(treePrefs[Random.Range(0, treePrefs.Length)], new Vector3(treeX, treeY, -1), Quaternion.identity, objectParent);
+                                float treeY = 9 + 1.5f * tree;
+                                float treeZ = -3 + tree * 0.05f;
+                                Instantiate(treePrefs[Random.Range(0, treePrefs.Length)], new Vector3(treeX, treeY, treeZ), Quaternion.identity, objectParent);
                             }
                         }
                     }
                     break;
                 case "obstacle":
-                    int rotationY = column <= 1 ? -85 : -95;
-                    Instantiate(obstaclePref, new Vector2(posX, 7), Quaternion.Euler(0, rotationY, 90), objectParent);
+                    Instantiate(obstaclePref, new Vector2(posX, 7), Quaternion.identity, objectParent);
                     break;
                 case "extra":
                     Instantiate(extraPref, new Vector2(posX, 7), Quaternion.identity, objectParent);

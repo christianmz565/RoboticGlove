@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-    BaseButton button = null;
+    private BaseButton button = null;
 
     // Start is called before the first frame update
     void Start()
