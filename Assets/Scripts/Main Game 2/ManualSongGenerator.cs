@@ -18,7 +18,7 @@ public class ManualSongGenerator : MonoBehaviour
         extra
     }
     private Mode actualMode = Mode.pass;
-    private bool createMode = false;
+    private bool createMode = true;
     // Start is called before the first frame update
     void Start()
     {

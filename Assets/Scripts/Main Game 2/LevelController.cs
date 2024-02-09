@@ -57,8 +57,7 @@ public class LevelController : MonoBehaviour
             {
                 case "pass":
                     float scale = GameSettings.ScrollSpeed * GameSettings.DurationScaleMult * float.Parse(args[3]);
-                    float colliderScale = (scale - 2) * 100;
-                    float posY = 7 + scale / 2;
+                    float posY = 9 + scale / 2;
 
                     for (int col = 0; col < 4; col++)
                     {
@@ -70,12 +69,12 @@ public class LevelController : MonoBehaviour
                             instNotPass.GetComponent<SpriteRenderer>().size = new Vector2(10.3f, height);
                             instNotPass.GetComponent<BoxCollider2D>().size = new Vector2(2.5f, height);
 
-                            int maxTrees = (int)(scale / 1.5f);
+                            int maxTrees = (int)(scale / 2f);
                             for (int tree = 0; tree < maxTrees; tree++)
                             {
                                 float var = Random.Range(-1f, 1f);
                                 float treeX = colX + var;
-                                float treeY = 9 + 1.5f * tree;
+                                float treeY = 11 + 2f * tree;
                                 float treeZ = -3 + tree * 0.05f;
                                 Instantiate(treePrefs[Random.Range(0, treePrefs.Length)], new Vector3(treeX, treeY, treeZ), Quaternion.identity, objectParent);
                             }

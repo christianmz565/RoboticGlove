@@ -7,7 +7,7 @@ public abstract class BaseButton : MonoBehaviour
     private float height;
     private const float PRESSED_DOWN_SCALE = 0.1f;
 
-    void Start()
+    public void Start()
     {
         buttonAudio = GetComponent<AudioSource>();
         buttonAudio.volume = PlayerPrefs.GetInt("volume") / 100.0f;

@@ -1,0 +1,40 @@
+ignored
+pass 0 3.1 2.7
+extra 2 6.4 
+obstacle 0 6.7 
+obstacle 1 6.7 
+pass 2 6.8 2.7
+extra 1 10 
+pass 1 10.4 2.7
+obstacle 2 10.5 
+obstacle 3 10.5 
+extra 3 13.5 
+pass 3 14 2.6
+obstacle 1 14 
+obstacle 2 14 
+extra 0 17 
+obstacle 3 18 
+obstacle 2 18 
+obstacle 1 19 
+obstacle 3 20 
+obstacle 0 21 
+extra 1 21 
+obstacle 2 22 
+obstacle 0 23 
+obstacle 1 23 
+extra 3 23 
+obstacle 3 24 
+obstacle 2 24 
+extra 0 24 
+obstacle 1 25 
+obstacle 2 25 
+extra 3 25 
+obstacle 3 26 
+obstacle 0 26 
+extra 1 26 
+obstacle 0 27 
+obstacle 2 27 
+obstacle 1 27 
+pass 2 28.1 2.7
+extra 2 31 
+obstacle 2 32 

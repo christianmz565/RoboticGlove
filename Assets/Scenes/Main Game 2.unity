@@ -3914,7 +3914,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a7ed08c393c4a64bae9c2e1e80a1d66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 60
+  health: 10
   score: 0
   scoreText: {fileID: 729498711}
   sprites:
