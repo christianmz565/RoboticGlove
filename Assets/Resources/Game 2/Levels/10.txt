@@ -1,75 +1,75 @@
 ignored
-pass 1 2.8 1
-pass 2 4.3 1
-extra 2 5.1 
-pass 3 5.7 1
-extra 3 6.5 
-pass 0 7.1 1
-extra 0 7.9 
-obstacle 3 10 
-obstacle 1 10 
-obstacle 2 10 
-extra 0 10 
-obstacle 0 11 
-obstacle 2 11 
-obstacle 1 11 
-extra 3 11 
-obstacle 3 12 
-obstacle 2 12 
-obstacle 1 12 
-extra 0 12 
-pass 2 13.5 1
-obstacle 0 13.6 
-obstacle 1 13.6 
-extra 2 13.6 
-pass 1 15.1 1
-extra 1 16 
-pass 2 16.5 1
-extra 2 17.2 
-pass 1 17.8 1
-extra 1 18.5 
-obstacle 3 21 
-obstacle 2 21 
-obstacle 0 21 
-extra 1 21 
-obstacle 0 22 
-obstacle 3 22 
-obstacle 1 22 
-extra 2 22 
-obstacle 3 23 
-obstacle 2 23 
-obstacle 0 23
-extra 1 23 
-obstacle 1 24 
-obstacle 3 24 
-extra 0 24 
-pass 0 24.4 1
-pass 3 25.8 1
-extra 3 26.6 
-pass 1 27.1 1
-extra 1 28 
-pass 2 28.4 1
-extra 2 29.2 
-obstacle 3 31 
-obstacle 2 31 
-obstacle 1 31 
-extra 0 31 
-obstacle 0 33 
-obstacle 2 33 
-obstacle 1 33 
-extra 3 33 
-obstacle 0 34 
-obstacle 2 34 
-obstacle 1 34 
-extra 3 34 
-obstacle 3 35 
-obstacle 1 35 
-extra 2 35 
-pass 2 35.1 7.4
-extra 2 37 
-extra 2 38 
-extra 2 39 
-extra 2 40 
-extra 2 41 
-obstacle 2 43 
-extra 1 43 
+n pass 1 2.8 1
+n pass 2 4.3 1
+n extra 2 5.1 
+n pass 3 5.7 1
+n extra 3 6.5 
+n pass 0 7.1 1
+n extra 0 7.9 
+n obstacle 3 10 
+n obstacle 1 10 
+n obstacle 2 10 
+n extra 0 10 
+n obstacle 0 11 
+n obstacle 2 11 
+n obstacle 1 11 
+n extra 3 11 
+n obstacle 3 12 
+n obstacle 2 12 
+n obstacle 1 12 
+n extra 0 12 
+n pass 2 13.5 1
+n obstacle 0 13.6 
+n obstacle 1 13.6 
+n extra 2 13.6 
+n pass 1 15.1 1
+n extra 1 16 
+n pass 2 16.5 1
+n extra 2 17.2 
+n pass 1 17.8 1
+n extra 1 18.5 
+n obstacle 3 21 
+n obstacle 2 21 
+n obstacle 0 21 
+n extra 1 21 
+n obstacle 0 22 
+n obstacle 3 22 
+n obstacle 1 22 
+n extra 2 22 
+n obstacle 3 23 
+n obstacle 2 23 
+n obstacle 0 23
+n extra 1 23 
+n obstacle 1 24 
+n obstacle 3 24 
+n extra 0 24 
+n pass 0 24.4 1
+n pass 3 25.8 1
+n extra 3 26.6 
+n pass 1 27.1 1
+n extra 1 28 
+n pass 2 28.4 1
+n extra 2 29.2 
+n obstacle 3 31 
+n obstacle 2 31 
+n obstacle 1 31 
+n extra 0 31 
+n obstacle 0 33 
+n obstacle 2 33 
+n obstacle 1 33 
+n extra 3 33 
+n obstacle 0 34 
+n obstacle 2 34 
+n obstacle 1 34 
+n extra 3 34 
+n obstacle 3 35 
+n obstacle 1 35 
+n extra 2 35 
+n pass 2 35.1 7.4
+n extra 2 37 
+n extra 2 38 
+n extra 2 39 
+n extra 2 40 
+n extra 2 41 
+n obstacle 2 43 
+n extra 1 43 

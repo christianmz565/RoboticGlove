@@ -12,6 +12,7 @@ public class LevelController : MonoBehaviour
     [SerializeField] private GameObject extraPref;
     [SerializeField] private PlayerController player;
     [SerializeField] private Transform objectParent;
+    [SerializeField] private TutorialG2 tutorial;
     private AudioSource scoreAudio;
     private string[] level;
     private float totalTime = GameSettings.TravelDelay;
@@ -38,7 +39,7 @@ public class LevelController : MonoBehaviour
         GameSettings.ScrollSpeed = 5;
         startingTime = Time.time;
         string[] lastArgs = level[level.Length - 1].Split(" ");
-        totalTime = float.Parse(lastArgs[2]) + GameSettings.TravelDelay;
+        totalTime = float.Parse(lastArgs[3]) + GameSettings.TravelDelay;
         StartCoroutine(GenerateLevel(level));
         StartCoroutine(UpdateLevel());
     }
@@ -49,14 +50,15 @@ public class LevelController : MonoBehaviour
         {
             Debug.Log(level[line]);
             string[] args = level[line].Split(" ");
-            yield return new WaitUntil(() => float.Parse(args[2]) < Time.time - startingTime + GameSettings.TravelDelay);
+            yield return new WaitUntil(() => float.Parse(args[3]) < Time.time - startingTime + GameSettings.TravelDelay);
             float width = GameSettings.Width;
-            int column = int.Parse(args[1]);
+            int column = int.Parse(args[2]);
             float posX = -width / 2 + column * width / 3;
-            switch (args[0])
+            if (args[0] == "t") StartCoroutine(tutorial.SlowDown());
+            switch (args[1])
             {
                 case "pass":
-                    float scale = GameSettings.ScrollSpeed * GameSettings.DurationScaleMult * float.Parse(args[3]);
+                    float scale = GameSettings.ScrollSpeed * GameSettings.DurationScaleMult * float.Parse(args[4]);
                     float posY = 9 + scale / 2;
 
                     for (int col = 0; col < 4; col++)
@@ -101,7 +103,7 @@ public class LevelController : MonoBehaviour
         }
         scoreAudio.loop = false;
         Debug.Log("Score: " + player.score);
-        
+
         StartCoroutine(SceneChanger.ChangeScene("Levels Menu"));
     }
 

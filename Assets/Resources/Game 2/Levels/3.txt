@@ -1,26 +1,26 @@
 ignored
-obstacle 0 2.3 
-obstacle 2 4.5 
-obstacle 1 6.8 
-obstacle 3 8.8 
-obstacle 0 11 
-obstacle 1 11 
-obstacle 1 13.2 
-obstacle 2 13.2 
-obstacle 2 15.5 
-obstacle 3 15.5 
-obstacle 3 17.6 
-obstacle 0 17.6 
-obstacle 2 19.9 
-obstacle 1 19.9 
-obstacle 0 22.1 
-obstacle 2 22.1 
-obstacle 1 26.3 
-obstacle 3 26.3 
-obstacle 0 28.4 
-obstacle 1 28.5 
-obstacle 3 30.6 
-obstacle 2 30.6 
-obstacle 0 32.5 
-obstacle 1 33 
-obstacle 2 33.5 
+n obstacle 0 2.3 
+n obstacle 2 4.5 
+n obstacle 1 6.8 
+n obstacle 3 8.8 
+t obstacle 0 11 
+n obstacle 1 11 
+n obstacle 1 13.2 
+n obstacle 2 13.2 
+n obstacle 2 15.5 
+n obstacle 3 15.5 
+n obstacle 3 17.6 
+n obstacle 0 17.6 
+n obstacle 2 19.9 
+n obstacle 1 19.9 
+n obstacle 0 22.1 
+n obstacle 2 22.1 
+n obstacle 1 26.3 
+n obstacle 3 26.3 
+n obstacle 0 28.4 
+n obstacle 1 28.4 
+n obstacle 3 30.6 
+n obstacle 2 30.6 
+t obstacle 0 32.5 
+n obstacle 1 33 
+n obstacle 2 33.5 

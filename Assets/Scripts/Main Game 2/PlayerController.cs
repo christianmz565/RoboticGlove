@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
 {
     public int health;
     public int score = 0;
+    public int currentColumn;
     [SerializeField] private Text scoreText;
     [SerializeField] private Sprite[] sprites;
     [SerializeField] private GameObject gameOverText;
@@ -40,13 +41,15 @@ public class PlayerController : MonoBehaviour
     void Move()
     {
         if (Input.GetKeyDown(KeyCode.D))
-            transform.position = positions[0];
+            currentColumn = 0;
         else if (Input.GetKeyDown(KeyCode.F))
-            transform.position = positions[1];
+            currentColumn = 1;
         else if (Input.GetKeyDown(KeyCode.J))
-            transform.position = positions[2];
+            currentColumn = 2;
         else if (Input.GetKeyDown(KeyCode.K))
-            transform.position = positions[3];
+            currentColumn = 3;
+
+        transform.position = positions[currentColumn];
     }
 
     public void Hurt()
