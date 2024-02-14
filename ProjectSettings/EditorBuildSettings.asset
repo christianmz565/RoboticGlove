@@ -23,4 +23,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Main Game 2.unity
     guid: 707fb062c675cf2479f1ef573bc829fc
+  - enabled: 1
+    path: Assets/Scenes/Patient Menu.unity
+    guid: b3e4f75fa24722e4181bcc9ce66607cf
   m_configObjects: {}

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TempTreeController : MonoBehaviour
+public class TempTreeController : AnyObjectController
 {
     private AudioSource hitAudio;
 

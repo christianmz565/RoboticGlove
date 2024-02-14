@@ -6,10 +6,10 @@ public class AnyObjectController : MonoBehaviour
 {
     void Update()
     {
-        transform.Translate(GameSettings.ScrollSpeed * Vector2.down * Time.deltaTime);
+        transform.Translate(GameSettings.ScrollSpeed * Time.deltaTime * Vector2.down);
     }
 
-    void OnTriggerExit2D(Collider2D other)
+    public void OnTriggerExit2D(Collider2D other)
     {
         if (other.name == "Bottom")
             Destroy(gameObject);

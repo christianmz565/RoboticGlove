@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class PassController : MonoBehaviour
+public class PassController : AnyObjectController
 {
     private PlayerController player;
     private bool hurtPlayer = true;
@@ -27,8 +27,9 @@ public class PassController : MonoBehaviour
         }
     }
 
-    void OnTriggerExit2D(Collider2D other)
+    new void OnTriggerExit2D(Collider2D other)
     {
+        base.OnTriggerExit2D(other);
         switch (other.name)
         {
             case "Check":

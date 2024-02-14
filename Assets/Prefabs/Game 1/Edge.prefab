@@ -150,6 +150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51535c771b610d04e9f8eef43ca7d550, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  clearedMaterial: {fileID: 2100000, guid: ba9e22d168e14cc4c8ea941a6251be19, type: 2}
   isCleared: 0
   areNodesHeld: 0
   nodesParent: {fileID: 0}

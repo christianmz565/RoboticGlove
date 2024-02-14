@@ -20,7 +20,7 @@ public class TreeController : MonoBehaviour
         for (int i = 0; i < treesParent.childCount; i++)
         {
             Transform treeTransform = treesParent.GetChild(i).transform;
-            treeTransform.Translate(Vector2.down * GameSettings.ScrollSpeed * Time.deltaTime);
+            treeTransform.Translate(GameSettings.ScrollSpeed * Time.deltaTime * Vector2.down);
             if (treeTransform.position.y < -8)
             {
                 Vector3 pos = treeTransform.position;

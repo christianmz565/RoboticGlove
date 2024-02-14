@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class ExtraController : MonoBehaviour
+public class ExtraController : AnyObjectController
 {
     [SerializeField] private Sprite[] sprites;
     private AudioSource extraAudio;

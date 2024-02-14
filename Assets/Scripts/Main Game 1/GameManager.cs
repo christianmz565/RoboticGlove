@@ -30,17 +30,13 @@ public class GameManager : MonoBehaviour
     {
         while (!hasWon)
         {
-            yield return new WaitForSeconds(1);
+            yield return null;
             hasWon = true;
             for (int i = 0; i < edgesParent.childCount; i++)
             {
                 EdgeController edgeComp = edgesParent.GetChild(i).GetComponent<EdgeController>();
-                edgeComp.CheckCleared();
                 if (!edgeComp.isCleared)
-                {
                     hasWon = false;
-                    break;
-                }
             }
             if (hasWon)
                 StartCoroutine(calculateScoreAndEnd());
@@ -90,6 +86,8 @@ public class GameManager : MonoBehaviour
             yield return new WaitForSeconds(0.01f);
         }
 
+        GameSettings.patient.AddScore(points);
+        GameSettings.patient.SavePatient();
         scoreAudio.loop = false;
         goalTimeText.text = "";
         StartCoroutine(SceneChanger.ChangeScene("Levels Menu"));

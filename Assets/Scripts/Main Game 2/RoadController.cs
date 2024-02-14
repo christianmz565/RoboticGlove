@@ -18,7 +18,7 @@ public class RoadController : MonoBehaviour
         for (int i = 0; i < roadsParent.childCount; i++)
         {
             Transform roadTransform = roadsParent.GetChild(i).transform;
-            roadTransform.Translate(Vector2.down * GameSettings.ScrollSpeed * Time.deltaTime);
+            roadTransform.Translate(GameSettings.ScrollSpeed * Time.deltaTime * Vector2.down);
             if (roadTransform.position.y <= -6)
             {
                 Vector3 pos = roadTransform.position;

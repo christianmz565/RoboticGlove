@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class EdgeController : MonoBehaviour
 {
+    [SerializeField] private Material clearedMaterial;
+    private Material defaultMaterial;
+    private Material currentMaterial;
     public bool isCleared = false;
     public bool areNodesHeld = false;
     public Transform nodesParent;
@@ -18,6 +21,8 @@ public class EdgeController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        defaultMaterial = GetComponent<LineRenderer>().material;
+        currentMaterial = defaultMaterial;
         node1 = nodesParent.GetChild(node1Idx);
         node2 = nodesParent.GetChild(node2Idx);
         lineRenderer = GetComponent<LineRenderer>();
@@ -30,9 +35,11 @@ public class EdgeController : MonoBehaviour
     {
         if (areNodesHeld)
             UpdateEdge();
+        else
+            CheckCleared();
     }
 
-    public void CheckCleared()
+    void CheckCleared()
     {
         if (!areNodesHeld)
         {
@@ -40,20 +47,15 @@ public class EdgeController : MonoBehaviour
             Vector2 pos2 = node2.position;
             RaycastHit2D[] hits = new RaycastHit2D[20];
             Physics2D.LinecastNonAlloc(pos1, pos2, hits);
-            /* string p = gameObject.name + " ";
-            foreach (RaycastHit2D hit in hits)
-            {
-                if (hit.collider != null && hit.collider.transform.parent != null) 
-                    p += hit.collider.name + " " + hit.collider.transform.parent.name + " ";    
-            }
-            Debug.Log(p); */
             for (int i = 0; i < hits.Length && hits[i].collider != null; i++)
             {
                 if (hits[i].collider.name != gameObject.name && hits[i].transform.parent != null && hits[i].transform.parent.name == "Edges Parent") {
                     isCleared = false;
+                    ToggleMaterial(defaultMaterial);
                     return;
                 }
             }
+            ToggleMaterial(clearedMaterial);
             isCleared = true;
         }
     }
@@ -72,14 +74,14 @@ public class EdgeController : MonoBehaviour
         Vector3[] rendererPositions = { pos1, pos2 };
         edgeCollider.SetPoints(colliderPositions);
         lineRenderer.SetPositions(rendererPositions);
+    }
 
-        /*transform.position = (pos1 + pos2) / 2;
-        transform.eulerAngles = new Vector3(0, 180 - Mathf.Atan2(pos2.z - pos1.z, pos2.x - pos1.x) * Mathf.Rad2Deg);
-        transform.localScale = new Vector3(Vector3.Distance(pos1, pos2), 0.1f, 0.1f);
-        BoxCollider collider = GetComponent<BoxCollider>();
-        Vector3 boundsSize = lineRenderer.bounds.size;
-        float h = Mathf.Sqrt(boundsSize.x * boundsSize.x + boundsSize.z * boundsSize.z);
-        float scale = Mathf.Max(0.1f, (h - 1) / h);
-        collider.size = new Vector3(scale, 0.5f, 0.5f);*/
+    private void ToggleMaterial(Material material)
+    {
+        if (currentMaterial != material)
+        {
+            GetComponent<LineRenderer>().material = material;
+            currentMaterial = material;
+        }
     }
 }

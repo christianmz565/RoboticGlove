@@ -36,7 +36,7 @@ public class LevelController : MonoBehaviour
     void StartLevel()
     {
         Debug.Log("Now playing level " + GameSettings.Level);
-        GameSettings.ScrollSpeed = 5;
+        GameSettings.ScrollSpeed = GameSettings.BaseScrollSpeed;
         startingTime = Time.time;
         string[] lastArgs = level[level.Length - 1].Split(" ");
         totalTime = float.Parse(lastArgs[3]) + GameSettings.TravelDelay;
@@ -59,7 +59,7 @@ public class LevelController : MonoBehaviour
             {
                 case "pass":
                     float scale = GameSettings.ScrollSpeed * GameSettings.DurationScaleMult * float.Parse(args[4]);
-                    float posY = 9 + scale / 2;
+                    float posY = 6 + scale / 2;
 
                     for (int col = 0; col < 4; col++)
                     {
@@ -76,7 +76,7 @@ public class LevelController : MonoBehaviour
                             {
                                 float var = Random.Range(-1f, 1f);
                                 float treeX = colX + var;
-                                float treeY = 11 + 2f * tree;
+                                float treeY = 8 + 2f * tree;
                                 float treeZ = -3 + tree * 0.05f;
                                 Instantiate(treePrefs[Random.Range(0, treePrefs.Length)], new Vector3(treeX, treeY, treeZ), Quaternion.identity, objectParent);
                             }
@@ -102,8 +102,9 @@ public class LevelController : MonoBehaviour
             yield return new WaitForSeconds(0.25f);
         }
         scoreAudio.loop = false;
-        Debug.Log("Score: " + player.score);
 
+        GameSettings.patient.AddScore(player.score);
+        GameSettings.patient.SavePatient();
         StartCoroutine(SceneChanger.ChangeScene("Levels Menu"));
     }
 
