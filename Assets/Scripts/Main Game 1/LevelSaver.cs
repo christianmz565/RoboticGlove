@@ -34,13 +34,13 @@ public class LevelSaver : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E))
         {
             node1Pos = nodeGrid.RealToRelativePosition(hand.position);
-            node1 = nodeGrid.GetNode(node1Pos);
+            node1 = nodeGrid.GetNodeByRelativePos(node1Pos);
         }
 
         if (Input.GetKeyDown(KeyCode.R))
         {
             Vector2 node2Pos = nodeGrid.RealToRelativePosition(hand.position);
-            NodeController node2 = nodeGrid.GetNode(node2Pos);
+            NodeController node2 = nodeGrid.GetNodeByRelativePos(node2Pos);
 
             EdgeController instEdge = Instantiate(edgePrefab, Vector2.zero, Quaternion.identity, edgesParent).GetComponent<EdgeController>();
             instEdge.name = "edge";
@@ -63,7 +63,7 @@ public class LevelSaver : MonoBehaviour
             {
                 edgeNodes[i] = new Vector2Int(edgesParent.GetChild(i).GetComponent<EdgeController>().node1Idx, edgesParent.GetChild(i).GetComponent<EdgeController>().node2Idx);
             }
-            level = new Level(nodePositions, edgeNodes);
+            level = new Level(1, nodePositions, edgeNodes);
         }
         if (Input.GetKeyDown(KeyCode.P))
         {

@@ -15,10 +15,10 @@ public class PlayerController : MonoBehaviour
     private bool alive = true;
     private AudioSource carAudio;
     private Vector3[] positions = {
-        new Vector3(-GameSettings.Width / 2, -2.5f, -2),
-        new Vector3(-GameSettings.Width / 2 + GameSettings.Width / 3, -2.5f, -2),
-        new Vector3(-GameSettings.Width / 2 + 2 * GameSettings.Width / 3, -2.5f, -2),
-        new Vector3(-GameSettings.Width / 2 + 3 * GameSettings.Width / 3, -2.5f, -2)
+        new(-GameSettings.Width / 2, -2.5f, -2),
+        new(-GameSettings.Width / 2 + GameSettings.Width / 3, -2.5f, -2),
+        new(-GameSettings.Width / 2 + 2 * GameSettings.Width / 3, -2.5f, -2),
+        new(-GameSettings.Width / 2 + 3 * GameSettings.Width / 3, -2.5f, -2)
     };
 
     // Start is called before the first frame update

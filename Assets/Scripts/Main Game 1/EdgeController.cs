@@ -17,7 +17,6 @@ public class EdgeController : MonoBehaviour
     private LineRenderer lineRenderer;
     private EdgeCollider2D edgeCollider;
 
-
     // Start is called before the first frame update
     void Start()
     {
@@ -35,11 +34,9 @@ public class EdgeController : MonoBehaviour
     {
         if (areNodesHeld)
             UpdateEdge();
-        else
-            CheckCleared();
     }
 
-    void CheckCleared()
+    public void CheckCleared()
     {
         if (!areNodesHeld)
         {
@@ -58,6 +55,7 @@ public class EdgeController : MonoBehaviour
             ToggleMaterial(clearedMaterial);
             isCleared = true;
         }
+        
     }
 
     public void UpdateEdge()

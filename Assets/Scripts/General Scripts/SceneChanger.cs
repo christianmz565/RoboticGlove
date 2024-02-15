@@ -1,7 +1,6 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class SceneChanger
 {
@@ -10,7 +9,7 @@ public class SceneChanger
     {
         fade = GameObject.Find("Fade");
         fade.GetComponent<Animator>().SetTrigger("Fading");
-        yield return new WaitUntil(() => fade.GetComponent<Image>().color.a == 1);
+        yield return new WaitForSeconds(1);
         SceneManager.LoadScene(scene);
     }
 }

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class LevelController : MonoBehaviour
 {
     [SerializeField] private Text percentageText;
+    [SerializeField] private Text resultsText;
     [SerializeField] private GameObject notPassPref;
     [SerializeField] private GameObject[] treePrefs;
     [SerializeField] private GameObject obstaclePref;
@@ -94,17 +95,22 @@ public class LevelController : MonoBehaviour
         }
         while (objectParent.childCount != 0)
             yield return new WaitForSeconds(0.5f);
+
+        resultsText.gameObject.SetActive(true);
         scoreAudio.Play();
-        while (player.health > 0)
+
+        do
         {
             player.Hurt();
             player.Score();
+            resultsText.text = string.Format("{0}\n+{1} PUNTOS!", GameSettings.patient.GetName().ToUpper(), player.score);
             yield return new WaitForSeconds(0.25f);
-        }
+        } while (player.health > 0);
         scoreAudio.loop = false;
 
         GameSettings.patient.AddScore(player.score);
         GameSettings.patient.SavePatient();
+        yield return new WaitForSeconds(2);
         StartCoroutine(SceneChanger.ChangeScene("Levels Menu"));
     }
 

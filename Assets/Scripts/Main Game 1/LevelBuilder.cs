@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class LevelBuilder : MonoBehaviour
@@ -7,21 +8,50 @@ public class LevelBuilder : MonoBehaviour
     [SerializeField] private GameObject nodePrefab;
     [SerializeField] private GameObject edgePrefab;
     [SerializeField] private NodeGrid nodeGrid;
-    private Level level;
+    [SerializeField] private LevelG1Generator levelGenerator;
+    [SerializeField] private Game1Manager manager;
 
     // Start is called before the first frame update
     void Start()
     {
-        TextAsset dataAsset = Resources.Load<TextAsset>("Game 1/Levels/" + GameSettings.Level);
-        string data = dataAsset.text;
-        level = JsonUtility.FromJson<Level>(data);
+        if (GameSettings.Level != "-1")
+        {
+            TextAsset dataAsset = Resources.Load<TextAsset>("Game 1/Levels/" + GameSettings.Level);
+            string data = dataAsset.text;
+            Level level = JsonUtility.FromJson<Level>(data);
+            GameSettings.difficulty = level.difficulty;
+            BuildLevel(level);
+        }
+        else
+        {
+            StartCoroutine(GenerateLevelRepeat());
+        }
+    }
+
+    private IEnumerator GenerateLevelRepeat()
+    {
+        int count=0;
+        do
+        {
+            Debug.Log("Generating level attempt " + count++);
+            DestroyLevel();
+            yield return new WaitForEndOfFrame();
+            Level level = levelGenerator.GenerateLevel();
+            BuildLevel(level);
+            yield return new WaitForEndOfFrame();
+            manager.CheckWin();
+        } while (manager.hasWon);
+    }
+
+    public void BuildLevel(Level level)
+    {
         for (int i = 0; i < level.nodePositions.Length; i++)
         {
             Vector2 pos = level.nodePositions[i];
             NodeController instNode = Instantiate(nodePrefab, new Vector3(0, 0, -1), Quaternion.identity, nodesParent).GetComponent<NodeController>();
             instNode.name = i + "";
 
-            nodeGrid.AddNode(instNode.GetComponent<NodeController>(), pos);
+            nodeGrid.AddNode(instNode, pos);
         }
         for (int i = 0; i < level.edgeNodes.Length; i++)
         {
@@ -36,9 +66,11 @@ public class LevelBuilder : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    private void DestroyLevel()
     {
-
+        foreach (Transform edge in edgesParent)
+            Destroy(edge.gameObject);
+        foreach (Transform node in nodesParent)
+            Destroy(node.gameObject);
     }
 }

@@ -36,6 +36,7 @@ public class PatientPicker : MonoBehaviour
             GameSettings.patient = new Patient(name);
             GameSettings.patient.SavePatient();
         }
+        GameSettings.patient.AddScore(0);
         patientController.ShowPatient();
         Debug.Log("full data path: " + path + "/" + name + ".json");
     }

@@ -63,7 +63,7 @@ public class HandController : MonoBehaviour
     void StartHold()
     {
         Vector2 nodePos = nodeGrid.RealToRelativePosition(transform.position);
-        NodeController node = nodeGrid.GetNode(nodePos);
+        NodeController node = nodeGrid.GetNodeByRelativePos(nodePos);
         if (node != null)
         {
             previousNodePos = nodePos;

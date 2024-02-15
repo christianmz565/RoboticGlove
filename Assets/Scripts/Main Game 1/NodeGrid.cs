@@ -19,19 +19,24 @@ public class NodeGrid : MonoBehaviour
         initialY = -height / 2;
     }
 
-    public NodeController GetNode(Vector2 relativePos)
+    public NodeController GetNodeByRelativePos(Vector2 relativePos)
     {
         string key = GenerateKey(relativePos);
         if (nodes.ContainsKey(key))
             return nodes[key];
-        else
-            return null;
+        return null;
     }
 
     public void AddNode(NodeController node, Vector2 realPos)
     {
         Vector2 relativePos = RealToRelativePosition(realPos);
         string key = GenerateKey(relativePos);
+        while (nodes.ContainsKey(key))
+        {
+            node.transform.Translate(Vector2.right * SIZE);
+            relativePos += Vector2.right;
+            key = GenerateKey(relativePos);
+        }
         nodes.Add(key, node);
         LockToGrid(node, relativePos);
     }
@@ -50,10 +55,10 @@ public class NodeGrid : MonoBehaviour
         }
     }*/
 
-    public NodeController GetNodeByPosition(Vector2 realPos)
+    public NodeController GetNodeByRealPos(Vector2 realPos)
     {
         Vector2 relativePos = RealToRelativePosition(realPos);
-        return GetNode(relativePos);
+        return GetNodeByRelativePos(relativePos);
     }
 
     public void MoveNode(NodeController node, Vector2 oldPos, Vector2 newPos)
