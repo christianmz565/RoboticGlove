@@ -2,9 +2,11 @@ using System.Collections;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using System.IO;
 
 public class LevelController : MonoBehaviour
 {
+    public bool levelCompleted;
     [SerializeField] private Text percentageText;
     [SerializeField] private Text resultsText;
     [SerializeField] private GameObject notPassPref;
@@ -22,31 +24,30 @@ public class LevelController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        GameSettings.ScrollSpeed = GameSettings.BaseScrollSpeed + GameSettings.Difficulty * 0.5f;
         scoreAudio = GetComponent<AudioSource>();
         scoreAudio.volume = PlayerPrefs.GetInt("volume") / 100.0f;
-        level = Resources.Load<TextAsset>("Game 2/Levels/" + GameSettings.Level).text.Split("\n");
-        StartLevel();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
+        if (GameSettings.Level != "-1")
+        {
+            percentageText.gameObject.SetActive(true);
+            level = Resources.Load<TextAsset>("Game 2/Levels/" + GameSettings.Level).text.Split("\n");
+            StartLevel();
+        }
     }
 
     void StartLevel()
     {
         Debug.Log("Now playing level " + GameSettings.Level);
-        GameSettings.ScrollSpeed = GameSettings.BaseScrollSpeed;
-        startingTime = Time.time;
         string[] lastArgs = level[level.Length - 1].Split(" ");
         totalTime = float.Parse(lastArgs[3]) + GameSettings.TravelDelay;
         StartCoroutine(GenerateLevel(level));
         StartCoroutine(UpdateLevel());
+        StartCoroutine(CalculateResultsAndEnd());
     }
 
-    IEnumerator GenerateLevel(string[] level)
+    public IEnumerator GenerateLevel(string[] level)
     {
+        startingTime = Time.time;
         for (int line = 1; line < level.Length; line++)
         {
             Debug.Log(level[line]);
@@ -93,17 +94,24 @@ public class LevelController : MonoBehaviour
             }
 
         }
-        while (objectParent.childCount != 0)
-            yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(GameSettings.TravelDelay);
+        levelCompleted = true;
+    }
 
+    private IEnumerator CalculateResultsAndEnd()
+    {
+        yield return new WaitUntil(() => levelCompleted);
         resultsText.gameObject.SetActive(true);
         scoreAudio.Play();
+
+        float pointValue = 100;
+        float difficultyMult = GameSettings.Difficulty * 0.3f + 1;
 
         do
         {
             player.Hurt();
-            player.Score();
-            resultsText.text = string.Format("{0}\n+{1} PUNTOS!", GameSettings.patient.GetName().ToUpper(), player.score);
+            player.Score(pointValue * difficultyMult);
+            resultsText.text = string.Format("{0}\n+{1} PUNTOS!\nMULTIPLICADOR DE DIFICULTAD X{2}", GameSettings.patient.GetName().ToUpper(), player.score, difficultyMult);
             yield return new WaitForSeconds(0.25f);
         } while (player.health > 0);
         scoreAudio.loop = false;
@@ -114,7 +122,7 @@ public class LevelController : MonoBehaviour
         StartCoroutine(SceneChanger.ChangeScene("Levels Menu"));
     }
 
-    IEnumerator UpdateLevel()
+    private IEnumerator UpdateLevel()
     {
         while (true)
         {

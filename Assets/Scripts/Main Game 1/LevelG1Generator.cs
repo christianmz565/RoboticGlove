@@ -13,8 +13,8 @@ public class LevelG1Generator : MonoBehaviour
 
     public Level GenerateLevel()
     {
-        int totalNodes = 4 + GameSettings.difficulty * 2;
-        int totalEdges = 4 + GameSettings.difficulty * 2;
+        int totalNodes = 4 + GameSettings.Difficulty * 2;
+        int totalEdges = 4 + GameSettings.Difficulty * 2;
         nodePositions = new Vector2[totalNodes];
         nodeRelPositions = new Vector2[totalNodes];
         edgeNodes = new();
@@ -71,7 +71,7 @@ public class LevelG1Generator : MonoBehaviour
         if (picked != -1)
             edgeNodes.Add(new(picked, Random.Range(0, totalNodes)));
 
-        return new Level(GameSettings.difficulty, nodePositions, edgeNodes.ToArray());
+        return new Level(GameSettings.Difficulty, nodePositions, edgeNodes.ToArray());
 
     }
 

@@ -26,7 +26,7 @@ public class PatientController : MonoBehaviour
         scoreText.text = scorestr;
 
         List<DayScore> scoresByDay = GameSettings.patient.GetScoresByDay();
-        int greatest = 0;
+        float greatest = 0;
         foreach(DayScore kv in scoresByDay)
             if (kv.GetScore() > greatest)
                 greatest = kv.GetScore();

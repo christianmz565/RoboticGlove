@@ -3,9 +3,9 @@ public static class GameSettings
     public static Patient patient = new("No seleccionado");
     public static string Game = "1";
     public static string Level = "1";
+    public static int Difficulty;
     
     // Game 1
-    public static int difficulty;
     public static float ColliderOffsetScale = 0.5f;
 
     // Game 2

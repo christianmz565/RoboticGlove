@@ -1,18 +1,17 @@
 using UnityEngine;
-using TMPro;
 using UnityEngine.UI;
 using System.Collections;
 
 public class PlayerController : MonoBehaviour
 {
     public int health;
-    public int score = 0;
+    public float score = 0;
     public int currentColumn;
+    public bool alive = true;
     [SerializeField] private Text scoreText;
     [SerializeField] private Sprite[] sprites;
     [SerializeField] private GameObject gameOverText;
     private Text healthText;
-    private bool alive = true;
     private AudioSource carAudio;
     private Vector3[] positions = {
         new(-GameSettings.Width / 2, -2.5f, -2),
@@ -57,9 +56,13 @@ public class PlayerController : MonoBehaviour
         health--;
         if (health < 0)
         {
-            gameOverText.SetActive(true);
             alive = false;
-            StartCoroutine(SlowTimeDownAndEnd());
+            StartCoroutine(SlowTimeDown());
+            if (GameSettings.Level != "-1")
+            {
+                gameOverText.SetActive(true);
+                StartCoroutine(End());
+            }
         }
         else
         {
@@ -67,19 +70,24 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private IEnumerator SlowTimeDownAndEnd()
+    private IEnumerator SlowTimeDown()
     {
         while (GameSettings.ScrollSpeed > 0)
         {
-            GameSettings.ScrollSpeed -= 0.25f;
+            GameSettings.ScrollSpeed = Mathf.Max(0, GameSettings.ScrollSpeed - 0.25f);
             yield return new WaitForSeconds(0.1f);
         }
+    }
+
+    private IEnumerator End()
+    {
+        yield return new WaitUntil(() => GameSettings.ScrollSpeed == 0);
         StartCoroutine(SceneChanger.ChangeScene("Levels Menu"));
     }
 
-    public void Score()
+    public void Score(float points)
     {
-        score += 100;
+        score += points;
         scoreText.text = "Puntaje\n" + score;
     }
 }

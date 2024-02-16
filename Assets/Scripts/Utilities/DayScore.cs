@@ -4,9 +4,9 @@ using System;
 public class DayScore
 {
     public string day;
-    public int score;
+    public float score;
 
-    public DayScore(string day, int score)
+    public DayScore(string day, float score)
     {
         this.day = day;
         this.score = score;
@@ -17,12 +17,12 @@ public class DayScore
         return day;
     }
 
-    public int GetScore()
+    public float GetScore()
     {
         return score;
     }
 
-    public void AddScore(int score)
+    public void AddScore(float score)
     {
         this.score += score;
     }

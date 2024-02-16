@@ -76,7 +76,7 @@ public class Game1Manager : MonoBehaviour
         secs = 1;
 
         float pointValue = 0.1f;
-        float difficultyMult = GameSettings.difficulty * 0.3f + 1;
+        float difficultyMult = GameSettings.Difficulty * 0.3f + 1;
         float timeMult = 5f / mins;
         float scoreMult = 100 * difficultyMult * timeMult;
         float points = 0;

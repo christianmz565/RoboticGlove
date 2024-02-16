@@ -12,7 +12,7 @@ public class RandomButton : LevelButton
 
     public override void InteractAction()
     {
-        GameSettings.difficulty = int.Parse(difficulty.text);
+        GameSettings.Difficulty = int.Parse(difficulty.text);
         base.InteractAction();
     }
 }

@@ -6,7 +6,7 @@ using UnityEngine;
 public class Patient
 {
     public string name;
-    public int score;
+    public float score;
     public List<DayScore> scoresByDay;
 
     public Patient(string name)
@@ -20,7 +20,7 @@ public class Patient
         return name;
     }
 
-    public int GetScore()
+    public float GetScore()
     {
         return score;
     }
@@ -30,7 +30,7 @@ public class Patient
         return scoresByDay;
     }
 
-    public void AddScore(int score)
+    public void AddScore(float score)
     {
         this.score += score;
         AddScoreByDay(score);
@@ -43,7 +43,7 @@ public class Patient
         File.WriteAllText(path + "/" + name + ".json", jsonPatient);
     }
 
-    private void AddScoreByDay(int score)
+    private void AddScoreByDay(float score)
     {
         string day = GenerateDateKey(DateTime.Now);
         foreach (DayScore kv in scoresByDay)

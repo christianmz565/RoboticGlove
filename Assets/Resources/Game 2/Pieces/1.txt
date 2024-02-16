@@ -1,0 +1,2 @@
+ignored
+t obstacle 0 3.6

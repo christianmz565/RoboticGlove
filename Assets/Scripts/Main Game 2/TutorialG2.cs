@@ -8,7 +8,6 @@ public class TutorialG2 : MonoBehaviour
     [SerializeField] private AudioSource carAudio;
     [SerializeField] private MeshRenderer display;
     private Animator animator;
-    private float slowDelay = GameSettings.ScrollSpeed / 3f;
 
     void Start()
     {
@@ -23,8 +22,13 @@ public class TutorialG2 : MonoBehaviour
         display.material.SetFloat("_GrayscaleIntensity", 1 - timeScale);
     }
 
+    // only works between 1 and 4
+    // limit those difficulties to normal levels
+    // just dont slow on endless mode
     public IEnumerator SlowDown()
     {
+        float slowDelay = GameSettings.ScrollSpeed / 15f;
+        Debug.Log(GameSettings.ScrollSpeed + " " + slowDelay);
         yield return new WaitForSeconds(slowDelay);
         animator.enabled = true;
         animator.Play("SlowDown");

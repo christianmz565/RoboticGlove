@@ -22,7 +22,7 @@ public class ExtraController : AnyObjectController
         if (other.name == "Player")
         {
             extraAudio.Play();
-            other.GetComponent<PlayerController>().Score();
+            other.GetComponent<PlayerController>().Score(100);
             StartCoroutine(DestroyExtra());
         }
     }
