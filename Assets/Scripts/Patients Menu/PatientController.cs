@@ -6,13 +6,15 @@ public class PatientController : MonoBehaviour
 {
     [SerializeField] private Text nameText;
     [SerializeField] private Text scoreText;
-    [SerializeField] private Text boardGuideText;
+    [SerializeField] private Text vGuideText;
+    [SerializeField] private Transform scoresBoard;
+    [SerializeField] private GameObject hGuide;
     [SerializeField] private LineRenderer lineR;
     [SerializeField] private LineRenderer lineL;
     private const float BOARD_DIVISIONS = 10f;
     private const float HORIZONTAL_MAX = 900f;
     private const float VERTICAL_MAX = 167f;
-
+    private const float X_OFFSET = 90f;
     // Start is called before the first frame update
     void Start()
     {
@@ -21,7 +23,7 @@ public class PatientController : MonoBehaviour
 
     public void ShowPatient()
     {
-        string namestr = string.Format("Hola, {0}!", GameSettings.patient.GetName());
+        string namestr = string.Format("{0}", GameSettings.patient.GetName());
         string scorestr = string.Format("Puntaje Total\n{0}", GameSettings.patient.GetScore());
         nameText.text = namestr;
         scoreText.text = scorestr;
@@ -44,15 +46,25 @@ public class PatientController : MonoBehaviour
         string guidestr = "0";
         for (int i = 1; i <= BOARD_DIVISIONS; i++)
             guidestr = string.Format("{0}\n", gap * i) + guidestr;
-        boardGuideText.text = guidestr;
+        vGuideText.text = guidestr;
 
         lineR.positionCount = scoresByDay.Count;
-        for (int i = 0; i < scoresByDay.Count; i++)
-            lineR.SetPosition(i, new Vector2(HORIZONTAL_MAX / (scoresByDay.Count - 1) * i, VERTICAL_MAX * scoresByDay[i].GetScoreR() / max));
-        
         lineL.positionCount = scoresByDay.Count;
         for (int i = 0; i < scoresByDay.Count; i++)
+        {
+            lineR.SetPosition(i, new Vector2(HORIZONTAL_MAX / (scoresByDay.Count - 1) * i, VERTICAL_MAX * scoresByDay[i].GetScoreR() / max));
             lineL.SetPosition(i, new Vector2(HORIZONTAL_MAX / (scoresByDay.Count - 1) * i, VERTICAL_MAX * scoresByDay[i].GetScoreL() / max));
+            Text instGuide = Instantiate(hGuide, Vector3.zero, Quaternion.identity, scoresBoard).GetComponent<Text>();
+            instGuide.GetComponent<RectTransform>().anchoredPosition = new Vector2(X_OFFSET + HORIZONTAL_MAX / (scoresByDay.Count - 1) * i, 0);
+            instGuide.text = string.Format("{0}", scoresByDay[i].GetDay()[..5]);
+        }
 
+        if (scoresByDay.Count == 1)
+        {
+            lineR.positionCount = 2;
+            lineL.positionCount = 2;
+            lineR.SetPosition(1, lineR.GetPosition(0) + Vector3.right * 10);
+            lineL.SetPosition(1, lineL.GetPosition(0) + Vector3.right * 10);
+        }
     }
 }

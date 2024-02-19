@@ -1,2 +1,8 @@
 ignored
-t pass 0 5.4 2.7
+n pass 0 5.4 2.7
+n extra 2 8.9
+n obstacle 0 9.9
+n obstacle 1 9.9
+n pass 2 11.2 2.7
+n extra 1 14.6
+n obstacle 2 15.8

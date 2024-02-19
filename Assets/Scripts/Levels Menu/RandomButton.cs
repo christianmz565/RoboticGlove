@@ -13,6 +13,12 @@ public class RandomButton : LevelButton
 
     public override void InteractAction()
     {
+        if (difficulty.text.Length == 0)
+        {
+            invalidDifWarning.SetTrigger("New");
+            return;
+        }
+        
         int dif = int.Parse(difficulty.text);
         if (dif >= 0 && dif <= 4)
         {

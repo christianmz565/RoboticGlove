@@ -1,2 +1,6 @@
 ignored
-t obstacle 0 3.6
+n obstacle 0 3.6
+n obstacle 2 6.1
+n obstacle 1 8.7
+n obstacle 3 11.0
+n obstacle 0 13.5

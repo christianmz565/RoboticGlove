@@ -1,2 +1,8 @@
 ignored
-t pass 1 6.5 1
+n pass 1 6.5 1
+n pass 2 9.4 1
+n extra 2 11.1
+n pass 3 13.7 1
+n extra 3 15.3
+n pass 0 17.8 1
+n extra 0 19.5
