@@ -7,7 +7,8 @@ public class PatientController : MonoBehaviour
     [SerializeField] private Text nameText;
     [SerializeField] private Text scoreText;
     [SerializeField] private Text boardGuideText;
-    [SerializeField] private LineRenderer line;
+    [SerializeField] private LineRenderer lineR;
+    [SerializeField] private LineRenderer lineL;
     private const float BOARD_DIVISIONS = 10f;
     private const float HORIZONTAL_MAX = 900f;
     private const float VERTICAL_MAX = 167f;
@@ -27,10 +28,15 @@ public class PatientController : MonoBehaviour
 
         List<DayScore> scoresByDay = GameSettings.patient.GetScoresByDay();
         float greatest = 0;
-        foreach(DayScore kv in scoresByDay)
-            if (kv.GetScore() > greatest)
-                greatest = kv.GetScore();
-        string greateststr = greatest.ToString(); 
+        foreach (DayScore kv in scoresByDay)
+        {
+            if (kv.GetScoreL() > greatest)
+                greatest = kv.GetScoreL();
+            if (kv.GetScoreR() > greatest)
+                greatest = kv.GetScoreR();
+
+        }
+        string greateststr = greatest.ToString();
         int firstD = int.Parse(greateststr[0].ToString()) + 1;
         int max = int.Parse(firstD + new string('0', greateststr.Length - 1));
 
@@ -40,8 +46,13 @@ public class PatientController : MonoBehaviour
             guidestr = string.Format("{0}\n", gap * i) + guidestr;
         boardGuideText.text = guidestr;
 
-        line.positionCount = scoresByDay.Count;
+        lineR.positionCount = scoresByDay.Count;
         for (int i = 0; i < scoresByDay.Count; i++)
-            line.SetPosition(i, new Vector2(HORIZONTAL_MAX / (scoresByDay.Count - 1) * i, VERTICAL_MAX * scoresByDay[i].GetScore() / max));
+            lineR.SetPosition(i, new Vector2(HORIZONTAL_MAX / (scoresByDay.Count - 1) * i, VERTICAL_MAX * scoresByDay[i].GetScoreR() / max));
+        
+        lineL.positionCount = scoresByDay.Count;
+        for (int i = 0; i < scoresByDay.Count; i++)
+            lineL.SetPosition(i, new Vector2(HORIZONTAL_MAX / (scoresByDay.Count - 1) * i, VERTICAL_MAX * scoresByDay[i].GetScoreL() / max));
+
     }
 }

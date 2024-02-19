@@ -4,12 +4,12 @@ using System;
 public class DayScore
 {
     public string day;
-    public float score;
+    public float scoreL;
+    public float scoreR;
 
-    public DayScore(string day, float score)
+    public DayScore(string day)
     {
         this.day = day;
-        this.score = score;
     }
 
     public string GetDay()
@@ -17,13 +17,21 @@ public class DayScore
         return day;
     }
 
-    public float GetScore()
+    public float GetScoreL()
     {
-        return score;
+        return scoreL;
     }
 
-    public void AddScore(float score)
+    public float GetScoreR()
     {
-        this.score += score;
+        return scoreR;
+    }
+
+    public void AddScore(float score, int hand)
+    {
+        if (hand == 1)
+            scoreR += score;
+        else
+            scoreL += score;
     }
 }

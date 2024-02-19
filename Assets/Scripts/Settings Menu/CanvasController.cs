@@ -7,6 +7,7 @@ public class CanvasController : MonoBehaviour
     [SerializeField] private Text fullscreenText;
     [SerializeField] private Text volumeText;
     [SerializeField] private Text sensitivityText;
+    [SerializeField] private Text chosenHandText;
 
     // Start is called before the first frame update
     void Start()
@@ -29,5 +30,6 @@ public class CanvasController : MonoBehaviour
         fullscreenText.text = PlayerPrefs.GetInt("fullscreen") == 1 ? "SI" : "NO";
         volumeText.text = PlayerPrefs.GetInt("volume") + "%";
         sensitivityText.text = PlayerPrefs.GetInt("cursorSensitivity") + "";
+        chosenHandText.text = PlayerPrefs.GetInt("chosenHand") == 1 ? "DERECHA" : "IZQUIERDA";
     }
 }

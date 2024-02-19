@@ -50,10 +50,14 @@ public class Patient
         {
             if (kv.GetDay() == day)
             {
-                kv.AddScore(score);
+                kv.AddScore(score, PlayerPrefs.GetInt("chosenHand"));
                 return;
             }
         }
+        DayScore newDay = new DayScore(day);
+        newDay.AddScore(score, PlayerPrefs.GetInt("chosenHand"));
+        scoresByDay.Add(newDay);
+
     }
     
     private string GenerateDateKey(DateTime time)

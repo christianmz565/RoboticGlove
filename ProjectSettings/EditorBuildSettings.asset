@@ -26,4 +26,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Patient Menu.unity
     guid: b3e4f75fa24722e4181bcc9ce66607cf
+  - enabled: 1
+    path: Assets/Scenes/Glove Settings Menu.unity
+    guid: fe5b13e74db7c4f4587f228d091b02e8
   m_configObjects: {}
