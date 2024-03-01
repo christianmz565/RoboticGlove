@@ -9,13 +9,17 @@ public class Game1Manager : MonoBehaviour
     [SerializeField] private Text timeText;
     [SerializeField] private Text goalTimeText;
     [SerializeField] private Text scoreText;
-    [SerializeField] private Text resultsText;
+    [SerializeField] private Transform results;
+    [SerializeField] private AudioClip music;
     private AudioSource scoreAudio;
     public int mins;
     private int secs;
     // Start is called before the first frame update
     void Start()
     {
+        AudioSource audioSource = GameObject.Find("Music").GetComponent<AudioSource>();
+        audioSource.clip = music;
+        audioSource.Play();
         scoreAudio = GetComponent<AudioSource>();
         scoreAudio.volume = PlayerPrefs.GetInt("volume") / 100.0f;
         StartCoroutine(AddTime());
@@ -36,7 +40,7 @@ public class Game1Manager : MonoBehaviour
             yield return null;
             CheckWin();
         }
-        StartCoroutine(calculateScoreAndEnd());
+        CalculateScoreAndEnd();
     }
 
     public void CheckWin()
@@ -66,45 +70,32 @@ public class Game1Manager : MonoBehaviour
         }
     }
 
-    private IEnumerator calculateScoreAndEnd()
+    private void CalculateScoreAndEnd()
     {
-        int finalM = mins;
-        int finalS = secs;
-        goalTimeText.text = string.Format("{0:D2}:{1:D2}", finalM, finalS);
-
-        mins = Mathf.CeilToInt((mins + 1) / 5f) * 5;
-        secs = 1;
+        int totalSecs = mins * 60 + secs;
+        int nextMark = Mathf.CeilToInt(1f * totalSecs / 300) * 300;
+        int totalTime = nextMark - totalSecs;
 
         float pointValue = 0.1f;
-        float difficultyMult = GameSettings.Difficulty * 0.3f + 1;
-        float timeMult = 5f / mins;
+        float difficultyMult = GameSettings.DifficultyG1 * 0.3f + 1;
+        float timeMult = 1f / (mins / 5 + 1);
         float scoreMult = 100 * difficultyMult * timeMult;
-        float points = 0;
+        int points = (int)(pointValue * scoreMult * totalTime);
+
+        Debug.Log("Points: " + points + " Scorable Time: " + totalTime + " TimeMult: " + timeMult + " DifficultyMult: " + difficultyMult);
+        results.gameObject.SetActive(true);
+        results.GetComponent<Animator>().Play("ResultsAnimIn");
+
+        Text resultsText = results.GetComponentInChildren<Text>();
+        resultsText.text = string.Format("{0}\n+{1:0} PUNTOS!\nTIEMPO TOTAL {2:D2}:{3:D2}", GameSettings.patient.GetName().ToUpper(), points, mins, secs);
+        scoreText.text = string.Format("Puntaje\n{0}", points);
 
         resultsText.gameObject.SetActive(true);
         scoreAudio.Play();
-        while (mins != finalM || secs != finalS)
-        {
-            points += pointValue * scoreMult;
-            secs--;
-            if (secs == 0)
-            {
-                mins--;
-                secs = 60;
-            }
-
-            resultsText.text = string.Format("{0}\n+{1:0} PUNTOS!\nMULTIPLICADOR DE DIFICULTAD X{2}\nMULTIPLICADOR DE TIEMPO X{3}", GameSettings.patient.GetName().ToUpper(), points, difficultyMult, timeMult);
-            timeText.text = string.Format("Tiempo Total\n{0:D2}:{1:D2}", mins, secs);
-            scoreText.text = string.Format("Puntaje\n{0}", points);
-
-            yield return new WaitForSeconds(0.01f);
-        }
 
         GameSettings.patient.AddScore((int)points);
         GameSettings.patient.SavePatient();
         scoreAudio.loop = false;
         goalTimeText.text = "";
-        yield return new WaitForSeconds(2);
-        StartCoroutine(SceneChanger.ChangeScene("Levels Menu"));
     }
 }

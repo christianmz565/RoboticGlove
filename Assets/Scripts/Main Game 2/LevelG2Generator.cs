@@ -8,7 +8,7 @@ public class LevelG2Generator : MonoBehaviour
     [SerializeField] private LevelController levelController;
     [SerializeField] private PlayerController player;
     [SerializeField] private Text timeText;
-    [SerializeField] private Text resultsText;
+    [SerializeField] private Transform results;
     [SerializeField] private AudioSource scoreAudio;
     private string[][] levelPieces;
     private int secs;
@@ -17,6 +17,7 @@ public class LevelG2Generator : MonoBehaviour
     {
         if (GameSettings.Level == "-1")
         {
+            GameSettings.ScrollSpeed = GameSettings.BaseScrollSpeed + GameSettings.DifficultyG2 * 0.5f;
             timeText.gameObject.SetActive(true);
             StartCoroutine(StartLevel());
             StartCoroutine(AddTime());
@@ -60,32 +61,18 @@ public class LevelG2Generator : MonoBehaviour
     private IEnumerator CalculateScoreAndEnd()
     {
         yield return new WaitUntil(() => !player.alive);
-        resultsText.gameObject.SetActive(true);
-        scoreAudio.Play();
+        results.gameObject.SetActive(true);
+        Text resultsText = results.GetComponentInChildren<Text>();
 
         float pointValue = 20;
-        float difficultyMult = GameSettings.Difficulty * 0.3f + 1;
+        float difficultyMult = GameSettings.DifficultyG2 * 0.3f + 1;
+        player.Score(pointValue * difficultyMult * (mins * 60 + secs));
 
-        resultsText.text = string.Format("{0}\n+{1} PUNTOS!\nMULTIPLICADOR DE DIFICULTAD X{2}", GameSettings.patient.GetName().ToUpper(), player.score, difficultyMult);
-        while (mins >= 0 && secs > 0)
-        {
-            player.Score(pointValue * difficultyMult);
-            timeText.text = string.Format("Tiempo Total\n{0:D2}:{1:D2}", mins, secs);
-            resultsText.text = string.Format("{0}\n+{1} PUNTOS!\nMULTIPLICADOR DE DIFICULTAD X{2}", GameSettings.patient.GetName().ToUpper(), player.score, difficultyMult);
-            yield return new WaitForSeconds(0.01f);
-            secs--;
-            if (secs == 0)
-            {
-                mins--;
-                secs = 60;
-            }
-        }
-
-        scoreAudio.loop = false;
+        resultsText.text = string.Format("{0}\n+{1} PUNTOS!\nTIEMPO TOTAL {2:D2}:{3:D2}", GameSettings.patient.GetName().ToUpper(), player.score, mins, secs);
+        scoreAudio.Play();
+        results.GetComponent<Animator>().Play("ResultsAnimIn");
 
         GameSettings.patient.AddScore(player.score);
         GameSettings.patient.SavePatient();
-        yield return new WaitForSeconds(2);
-        StartCoroutine(SceneChanger.ChangeScene("Levels Menu"));
     }
 }

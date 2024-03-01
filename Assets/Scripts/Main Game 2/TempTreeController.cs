@@ -18,7 +18,7 @@ public class TempTreeController : AnyObjectController
         {
             hitAudio.Play();
             other.GetComponent<PlayerController>().Hurt();
-            StartCoroutine(DestroyTree());
+            // StartCoroutine(DestroyTree());
         }
     }
 

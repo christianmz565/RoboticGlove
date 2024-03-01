@@ -18,7 +18,7 @@ public class ObstacleController : AnyObjectController
         {
             hitAudio.Play();
             other.GetComponent<PlayerController>().Hurt();
-            StartCoroutine(DestroyObstacle());
+            // StartCoroutine(DestroyObstacle());
         }
     }
 

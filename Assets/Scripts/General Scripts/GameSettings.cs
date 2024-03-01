@@ -3,12 +3,13 @@ public static class GameSettings
     public static Patient patient = new("No Seleccionado");
     public static string Game = "1";
     public static string Level = "1";
-    public static int Difficulty;
     
     // Game 1
+    public static int DifficultyG1;
     public static float ColliderOffsetScale = 0.5f;
 
     // Game 2
+    public static int DifficultyG2;
     public static float Width = 12;
     public static float BaseScrollSpeed = 3;
     public static float ScrollSpeed = 3;

@@ -71,5 +71,5 @@ n extra 2 90.2
 n extra 2 92.6
 n extra 2 95.0
 n extra 2 97.4
-t obstacle 2 100.8
+n obstacle 2 100.8
 n extra 1 100.8

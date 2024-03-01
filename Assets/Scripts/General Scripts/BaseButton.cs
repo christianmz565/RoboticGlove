@@ -3,27 +3,26 @@ using UnityEngine;
 public abstract class BaseButton : MonoBehaviour
 {
     private AudioSource buttonAudio;
-    private float height;
-    private const float PRESSED_DOWN_SCALE = 0.1f;
+    private Animator animator;
 
     public void Start()
     {
         buttonAudio = GetComponent<AudioSource>();
+        animator = GetComponent<Animator>();
         buttonAudio.volume = PlayerPrefs.GetInt("volume") / 100.0f;
-
-        height = GetComponent<RectTransform>().rect.height;
     }
 
     public void StartInteract()
     {
         buttonAudio.Play();
-        transform.Translate(Vector2.down * height * PRESSED_DOWN_SCALE);
+        animator.SetTrigger("Start");
+
     }
 
     public void EndInteract()
     {
         InteractAction();
-        transform.Translate(Vector2.up * height * PRESSED_DOWN_SCALE);
+        animator.SetTrigger("End");
     }
 
     public abstract void InteractAction();

@@ -19,7 +19,7 @@ public class LevelBuilder : MonoBehaviour
             TextAsset dataAsset = Resources.Load<TextAsset>("Game 1/Levels/" + GameSettings.Level);
             string data = dataAsset.text;
             Level level = JsonUtility.FromJson<Level>(data);
-            GameSettings.Difficulty = level.difficulty;
+            GameSettings.DifficultyG1 = level.difficulty;
             BuildLevel(level);
         }
         else

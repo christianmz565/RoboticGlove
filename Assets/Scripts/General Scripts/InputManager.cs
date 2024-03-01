@@ -17,15 +17,15 @@ public class InputManager : MonoBehaviour
 
     void Check()
     {
-        float mult = 10 * Mathf.Pow(0.9f, PlayerPrefs.GetInt("cursorSensitivity"));
+        float mult = Mathf.Pow(0.9f, PlayerPrefs.GetInt("cursorSensitivity")) * 10;
         if (Input.GetKey(KeyCode.A))
-            transform.Translate(Vector2.left * Time.deltaTime * mult);
+            transform.Translate(Time.deltaTime * mult * Vector2.left);
         if (Input.GetKey(KeyCode.W))
-            transform.Translate(Vector2.up * Time.deltaTime * mult);
+            transform.Translate(Time.deltaTime * mult * Vector2.up);
         if (Input.GetKey(KeyCode.S))
-            transform.Translate(Vector2.down * Time.deltaTime * mult);
+            transform.Translate(Time.deltaTime * mult * Vector2.down);
         if (Input.GetKey(KeyCode.D))
-            transform.Translate(Vector2.right * Time.deltaTime * mult);
+            transform.Translate(Time.deltaTime * mult * Vector2.right);
 
         if (Input.GetKeyDown(KeyCode.Space))
             ButtonInteract();
@@ -40,10 +40,11 @@ public class InputManager : MonoBehaviour
         Debug.DrawLine(transform.position, (Vector2)transform.position + Vector2.right / 4, Color.green, 1);
         Debug.DrawLine(transform.position, (Vector2)transform.position + Vector2.down / 4, Color.green, 1);
         Debug.DrawLine(transform.position, (Vector2)transform.position + Vector2.left / 4, Color.green, 1);
-        if (hit)
+        if (hit.collider != null)
         {
-            button = hit.collider.GetComponent<BaseButton>();
-            button.StartInteract();
+            bool validButton = hit.collider.TryGetComponent<BaseButton>(out button);
+            if (validButton)
+                button.StartInteract();
         }
     }
 

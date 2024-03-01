@@ -27,7 +27,6 @@ public class ResolutionButton : BaseButton
         Vector2 resolution = resolutionsList[resolutionIndex];
         Debug.Log("Resolution changed to " + resolution);
         resolutionText.text = resolution.x + "x" + resolution.y;
-        Camera.main.aspect = resolution.x / resolution.y;
         Screen.SetResolution((int)resolution.x, (int)resolution.y, PlayerPrefs.GetInt("fullscreen") == 1);
         PlayerPrefs.Save();
     }

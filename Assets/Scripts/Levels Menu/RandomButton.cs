@@ -22,7 +22,10 @@ public class RandomButton : LevelButton
         int dif = int.Parse(difficulty.text);
         if (dif >= 0 && dif <= 4)
         {
-            GameSettings.Difficulty = dif;
+            if (GameSettings.Game == "1")
+                GameSettings.DifficultyG1 = dif;
+            else
+                GameSettings.DifficultyG2 = dif;
             base.InteractAction();
         }
         else

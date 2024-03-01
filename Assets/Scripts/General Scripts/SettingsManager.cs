@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SettingsManager : MonoBehaviour
 {
@@ -22,9 +23,9 @@ public class SettingsManager : MonoBehaviour
 
         int resolutionIndex = PlayerPrefs.GetInt("resolutionIndex", 0);
         bool fullscreen = PlayerPrefs.GetInt("fullscreen", 1) == 1;
-        int volume = PlayerPrefs.GetInt("volume", 25);
         Vector2 resolution = resolutionsList[resolutionIndex];
         Screen.SetResolution((int)resolution.x, (int)resolution.y, fullscreen);
+        //GameObject.Find("Canvas").GetComponent<CanvasScaler>().referenceResolution = new Vector2(0, resolution.y);
         // do something with volume
     }
 }
