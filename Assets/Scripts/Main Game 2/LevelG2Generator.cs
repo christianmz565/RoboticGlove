@@ -64,7 +64,7 @@ public class LevelG2Generator : MonoBehaviour
         results.gameObject.SetActive(true);
         Text resultsText = results.GetComponentInChildren<Text>();
 
-        float pointValue = 20;
+        float pointValue = 30;
         float difficultyMult = GameSettings.DifficultyG2 * 0.3f + 1;
         player.Score(pointValue * difficultyMult * (mins * 60 + secs));
 

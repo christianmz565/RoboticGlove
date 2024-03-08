@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour
         smoke = GetComponentInChildren<ParticleSystem>();
         carAudio = GetComponent<AudioSource>();
         carAudio.volume = PlayerPrefs.GetInt("volume") / 100.0f;
-        GetComponent<SpriteRenderer>().sprite = sprites[Random.Range(0, sprites.Length)];
+        GetComponentInChildren<SpriteRenderer>().sprite = sprites[Random.Range(0, sprites.Length)];
     }
 
     // Update is called once per frame
@@ -39,13 +39,25 @@ public class PlayerController : MonoBehaviour
     void Move()
     {
         if (Input.GetKeyDown(KeyCode.D))
+        {
             currentColumn = 0;
+            Debug.Log("Key D pressed");
+        }
         else if (Input.GetKeyDown(KeyCode.F))
+        {
             currentColumn = 1;
+            Debug.Log("Key F pressed");
+        }
         else if (Input.GetKeyDown(KeyCode.J))
+        {
             currentColumn = 2;
+            Debug.Log("Key J pressed");
+        }
         else if (Input.GetKeyDown(KeyCode.K))
+        {
             currentColumn = 3;
+            Debug.Log("Key K pressed");
+        }
 
         transform.position = positions[currentColumn];
     }

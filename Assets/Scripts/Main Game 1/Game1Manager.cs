@@ -34,7 +34,7 @@ public class Game1Manager : MonoBehaviour
 
     private IEnumerator CheckWinRepeat()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.1f);
         while (!hasWon)
         {
             yield return null;

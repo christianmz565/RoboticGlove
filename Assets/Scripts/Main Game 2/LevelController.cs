@@ -115,10 +115,12 @@ public class LevelController : MonoBehaviour
     private IEnumerator CalculateResultsAndEnd()
     {
         yield return new WaitUntil(() => levelCompleted || !player.alive);
+        if (player.alive)
+            player.GetComponent<Animator>().SetTrigger("EndLevel");
         results.gameObject.SetActive(true);
         Text resultsText = results.GetComponentInChildren<Text>();
 
-        float pointValue = 100;
+        float pointValue = 3500;
         float difficultyMult = GameSettings.DifficultyG2 * 0.3f + 1;
         player.Score(pointValue * difficultyMult * (player.alive ? 1 : 0));
 
