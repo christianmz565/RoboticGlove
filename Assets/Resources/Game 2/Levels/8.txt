@@ -1,30 +1,31 @@
 ignored
-n pass 1 5.5 1.1
-n obstacle 1 8.5
-n extra 2 8.5
-n pass 3 11.2 1.1
-n obstacle 3 13.9
-n extra 0 13.9
-n pass 0 16.9 1.1
-n obstacle 0 19.3
-n extra 2 19.3
-n pass 2 22.4 1.1
-n obstacle 2 25.7
-n extra 3 25.7
-n obstacle 1 27.4
-n pass 0 28.6 1.1
-n obstacle 0 31.8
-n extra 3 31.8
-n obstacle 2 33.5
-n pass 3 34.8 1.1
-n obstacle 3 37.9
-n obstacle 2 37.9
-n extra 0 37.9
-n obstacle 1 39.6
-n extra 2 39.6
-n pass 1 41.6 1.1
-n obstacle 1 44.5
-n extra 3 44.5
-n obstacle 0 46.2
-n obstacle 3 46.2
-n extra 2 46.2
+n pass 1 8.9 1.1
+n obstacle 1 13.6
+n extra 2 13.6
+n pass 3 18.0 1.1
+n obstacle 3 22.4
+n extra 0 22.4
+n pass 0 27.1 1.1
+n obstacle 0 31.2
+n extra 2 31.2
+n pass 2 36.0 1.1
+n obstacle 2 41.0
+n extra 3 41.0
+n obstacle 1 44.4
+n pass 0 47.3 1.1
+n obstacle 0 52.2
+n extra 3 52.2
+n obstacle 2 55.6
+n pass 3 58.6 1.1
+n obstacle 3 63.4
+n obstacle 2 63.4
+n extra 0 63.4
+n obstacle 1 66.8
+n extra 2 66.8
+n pass 1 70.5 1.1
+n obstacle 1 75.1
+n extra 3 75.1
+n obstacle 0 78.5
+n obstacle 3 78.5
+n extra 2 78.5
+n goal 0 81.2

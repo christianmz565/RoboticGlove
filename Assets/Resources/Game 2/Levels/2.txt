@@ -1,10 +1,11 @@
 ignored
-t pass 1 3.8 2.2
-n pass 3 8.4 2.1
-n pass 0 13.0 2.1
-n pass 2 17.3 2.1
-n pass 0 21.6 1.1
-n pass 1 25.0 1.1
-n pass 2 27.8 1.1
-n pass 3 30.5 1.1
-n pass 1 33.3 3.3
+t pass 1 7.2 2.2
+n pass 3 13.5 2.1
+n pass 0 19.8 2.1
+n pass 2 25.8 2.1
+n pass 0 31.8 1.1
+n pass 1 36.9 1.1
+n pass 2 41.4 1.1
+n pass 3 45.8 1.1
+n pass 1 50.3 3.3
+n goal 0 56.3

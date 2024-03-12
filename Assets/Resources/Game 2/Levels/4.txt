@@ -1,12 +1,13 @@
 ignored
-t pass 1 4.7 6.3
-n obstacle 0 14.3
-n obstacle 1 14.3
-n obstacle 3 14.3
-n obstacle 0 19.6
-n obstacle 1 19.6
-n obstacle 2 19.6
-t extra 2 23.9
-n extra 3 26.2
-n extra 1 28.5
-n extra 0 30.8
+t pass 1 8.1 6.3
+n obstacle 0 19.4
+n obstacle 1 19.4
+n obstacle 3 19.4
+n obstacle 0 26.4
+n obstacle 1 26.4
+n obstacle 2 26.4
+t extra 2 32.4
+n extra 3 36.4
+n extra 1 40.4
+n extra 0 44.4
+n goal 0 47.1

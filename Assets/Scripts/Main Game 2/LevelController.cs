@@ -11,6 +11,7 @@ public class LevelController : MonoBehaviour
     [SerializeField] private Sprite[] treeSprites;
     [SerializeField] private GameObject obstaclePref;
     [SerializeField] private GameObject extraPref;
+    [SerializeField] private GameObject goalPref;
     [SerializeField] private PlayerController player;
     [SerializeField] private Transform objectParent;
     [SerializeField] private TutorialG2 tutorial;
@@ -110,6 +111,9 @@ public class LevelController : MonoBehaviour
 
                     if (args[0] == "t")
                         StartCoroutine(tutorial.SlowDown(column));
+                    break;
+                case "goal":
+                    Instantiate(goalPref, new Vector2(0, 7), Quaternion.identity, objectParent);
                     break;
             }
 

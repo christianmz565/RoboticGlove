@@ -16,7 +16,7 @@ for line in lines:
         count += 1
     if len(columns) >= 4:
         previous = columns[3]
-        value = decimal.Decimal(columns[3]) + decimal.Decimal('0.7') * count
+        value = decimal.Decimal(columns[3]) + decimal.Decimal('1.7') * count
         columns[3] = str(value)
     output_data.append(' '.join(columns))
 

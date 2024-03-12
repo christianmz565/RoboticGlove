@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject gameOverText;
     private const int MAX_SMOKE = 30;
     private int health = 5;
+    private float basePitch;
     private AudioSource carAudio;
     private ParticleSystem smoke;
     private ParticleSystem.EmissionModule emission;
@@ -29,6 +30,7 @@ public class PlayerController : MonoBehaviour
         smoke = GetComponentInChildren<ParticleSystem>();
         emission = smoke.emission;
         carAudio = GetComponent<AudioSource>();
+        basePitch = carAudio.pitch;
         carAudio.volume = PlayerPrefs.GetInt("volume") / 100.0f;
         GetComponentInChildren<SpriteRenderer>().sprite = sprites[Random.Range(0, sprites.Length)];
     }
@@ -38,6 +40,10 @@ public class PlayerController : MonoBehaviour
     {
         if (alive)
             Move();
+
+        // remove this
+        if (Input.GetKeyDown(KeyCode.F7))
+            Time.timeScale = 2.5f;
     }
 
     void Move()
@@ -72,6 +78,7 @@ public class PlayerController : MonoBehaviour
             return true;
         }
         emission.rateOverTime = MAX_SMOKE / health;
+        carAudio.pitch = basePitch - (5 - health) * 0.1f;
         smoke.Play();
         return false;
     }
