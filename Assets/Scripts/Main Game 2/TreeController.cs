@@ -39,12 +39,12 @@ public class TreeController : MonoBehaviour
             if (queue.Count > 0)
             {
                 Transform treeTransform = queue.Dequeue();
-                float x = Random.Range(8.5f, 10f);
+                float x = Random.Range(7f, 10f);
                 if (invert)
                     x *= -1;
                 invert = !invert;
                 treeTransform.position = new Vector3(x, 8, treeTransform.position.z);
-                yield return new WaitForSeconds(Random.Range(0.25f, 0.5f));
+                yield return new WaitForSeconds(Random.Range(0.5f, 1f));
             }
             yield return null;
         }

@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8811514998277050730}
   - component: {fileID: 1992495406927139794}
   - component: {fileID: -6236706797044246389}
+  - component: {fileID: 4349513985843659631}
   m_Layer: 0
   m_Name: Obstacle
   m_TagString: Untagged
@@ -82,7 +83,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 1
-  m_Size: {x: 7, y: 5}
+  m_Size: {x: 5, y: 3}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -125,13 +126,13 @@ BoxCollider2D:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 19.2, y: 10.8}
-    newSize: {x: 7, y: 5}
+    newSize: {x: 5, y: 3}
     adaptiveTilingThreshold: 0.5
     drawMode: 1
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1, y: 0.75}
   m_EdgeRadius: 0
 --- !u!50 &8811514998277050730
 Rigidbody2D:
@@ -172,10 +173,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19ee53104324765499c4ecb6a84e2821, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sprites:
-  - {fileID: 21300000, guid: e83aa19f3dbb0d74ba134e36e4df0cba, type: 3}
-  - {fileID: 21300000, guid: 639414a5b890419429f3ca321a814736, type: 3}
-  - {fileID: 21300000, guid: 7480c87a33012d5459c8427962c4d330, type: 3}
 --- !u!82 &-6236706797044246389
 AudioSource:
   m_ObjectHideFlags: 0
@@ -272,3 +269,24 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!95 &4349513985843659631
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2073772929201981598}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 9bfcdacb9f2d91d4890854da8e7893ee, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

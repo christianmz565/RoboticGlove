@@ -10,8 +10,8 @@ public static class GameSettings
 
     // Game 2
     public static int DifficultyG2;
-    public static float Width = 12;
-    public static float BaseScrollSpeed = 3;
+    public static float Width = 9;
+    public static float BaseScrollSpeed = 2;
     public static float ScrollSpeed = 3;
     public static float TravelDelay = 7f / ScrollSpeed;
     public static float DurationScaleMult = 0.8f;

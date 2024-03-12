@@ -48,23 +48,32 @@ public class PatientController : MonoBehaviour
             guidestr = string.Format("{0}\n", gap * i) + guidestr;
         vGuideText.text = guidestr;
 
-        lineR.positionCount = scoresByDay.Count;
-        lineL.positionCount = scoresByDay.Count;
-        for (int i = 0; i < scoresByDay.Count; i++)
-        {
-            lineR.SetPosition(i, new Vector2(HORIZONTAL_MAX / (scoresByDay.Count - 1) * i, VERTICAL_MAX * scoresByDay[i].GetScoreR() / max));
-            lineL.SetPosition(i, new Vector2(HORIZONTAL_MAX / (scoresByDay.Count - 1) * i, VERTICAL_MAX * scoresByDay[i].GetScoreL() / max));
-            Text instGuide = Instantiate(hGuide, Vector3.zero, Quaternion.identity, scoresBoard).GetComponent<Text>();
-            instGuide.GetComponent<RectTransform>().anchoredPosition = new Vector2(X_OFFSET + HORIZONTAL_MAX / (scoresByDay.Count - 1) * i, 0);
-            instGuide.text = string.Format("{0}", scoresByDay[i].GetDay()[..5]);
-        }
+        int totalScores = scoresByDay.Count;
+        lineR.positionCount = totalScores;
+        lineL.positionCount = totalScores;
 
-        if (scoresByDay.Count == 1)
+        if (totalScores == 1)
         {
             lineR.positionCount = 2;
             lineL.positionCount = 2;
             lineR.SetPosition(1, lineR.GetPosition(0) + Vector3.right * 10);
             lineL.SetPosition(1, lineL.GetPosition(0) + Vector3.right * 10);
         }
+
+        for (int i = 0; i < totalScores; i++)
+        {
+            float x;
+            if (totalScores == 1)
+                x = 0;
+            else
+                x = HORIZONTAL_MAX / (totalScores - 1) * i;
+            lineR.SetPosition(i, new Vector3(x, VERTICAL_MAX * scoresByDay[i].GetScoreR() / max));
+            lineL.SetPosition(i, new Vector3(x, VERTICAL_MAX * scoresByDay[i].GetScoreL() / max));
+            Text instGuide = Instantiate(hGuide, Vector3.zero, Quaternion.identity, scoresBoard).GetComponent<Text>();
+            instGuide.GetComponent<RectTransform>().anchoredPosition = new Vector2(X_OFFSET + HORIZONTAL_MAX / (scoresByDay.Count - 1) * i, 0);
+            instGuide.text = string.Format("{0}", scoresByDay[i].GetDay()[..5]);
+        }
+
+
     }
 }

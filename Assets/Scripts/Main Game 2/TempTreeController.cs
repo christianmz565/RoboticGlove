@@ -5,10 +5,12 @@ using UnityEngine;
 public class TempTreeController : AnyObjectController
 {
     private AudioSource hitAudio;
+    private Animator animator;
 
     void Start()
     {
         hitAudio = GetComponent<AudioSource>();
+        animator = GetComponent<Animator>();
         hitAudio.volume = PlayerPrefs.GetInt("volume") / 100.0f;
     }
 
@@ -17,15 +19,15 @@ public class TempTreeController : AnyObjectController
         if (other.name == "Player")
         {
             hitAudio.Play();
-            other.GetComponent<PlayerController>().Hurt();
-            // StartCoroutine(DestroyTree());
+            if (!other.GetComponent<PlayerController>().Hurt())
+                StartCoroutine(DestroyTree());
         }
     }
 
     private IEnumerator DestroyTree()
     {
-        GetComponent<SpriteRenderer>().enabled = false;
-        yield return new WaitUntil(() => hitAudio.time == hitAudio.clip.length);
+        animator.SetTrigger("Vanish");
+        yield return new WaitForSeconds(0.5f);
         Destroy(gameObject);
     }
 }

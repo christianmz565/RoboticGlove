@@ -1,15 +1,14 @@
 using System.Collections;
 using UnityEngine;
-using TMPro;
 using UnityEngine.UI;
-using System.IO;
 
 public class LevelController : MonoBehaviour
 {
     public bool levelCompleted;
-    [SerializeField] private Text percentageText;
+    [SerializeField] private RectTransform progressBar;
     [SerializeField] private GameObject notPassPref;
-    [SerializeField] private GameObject[] treePrefs;
+    [SerializeField] private GameObject treePref;
+    [SerializeField] private Sprite[] treeSprites;
     [SerializeField] private GameObject obstaclePref;
     [SerializeField] private GameObject extraPref;
     [SerializeField] private PlayerController player;
@@ -18,9 +17,12 @@ public class LevelController : MonoBehaviour
     [SerializeField] private Transform results;
     [SerializeField] private AudioClip music;
     private AudioSource scoreAudio;
+    private Text progressText;
+    private RectTransform currentProgress;
     private string[] level;
     private float totalTime = GameSettings.TravelDelay;
     private float startingTime;
+    private const int PROGRESS_BAR_WIDTH = 500;
 
     // Start is called before the first frame update
     void Start()
@@ -28,12 +30,15 @@ public class LevelController : MonoBehaviour
         AudioSource audioSource = GameObject.Find("Music").GetComponent<AudioSource>();
         audioSource.clip = music;
         audioSource.Play();
+
         scoreAudio = GetComponent<AudioSource>();
         scoreAudio.volume = PlayerPrefs.GetInt("volume") / 100.0f;
         if (GameSettings.Level != "-1")
         {
             GameSettings.ScrollSpeed = GameSettings.BaseScrollSpeed;
-            percentageText.gameObject.SetActive(true);
+            progressBar.gameObject.SetActive(true);
+            currentProgress = progressBar.GetChild(0).GetComponent<RectTransform>();
+            progressText = currentProgress.GetChild(0).GetComponent<Text>();
             level = Resources.Load<TextAsset>("Game 2/Levels/" + GameSettings.Level).text.Split("\n");
             StartLevel();
         }
@@ -78,14 +83,15 @@ public class LevelController : MonoBehaviour
                             instNotPass.GetComponent<SpriteRenderer>().size = new Vector2(10.3f, height);
                             instNotPass.GetComponent<BoxCollider2D>().size = new Vector2(2.5f, height);
 
-                            int maxTrees = (int)(scale / 2f);
+                            int maxTrees = (int)(scale / 2f) + 1;
                             for (int tree = 0; tree < maxTrees; tree++)
                             {
                                 float var = Random.Range(-1f, 1f);
                                 float treeX = colX + var;
                                 float treeY = 8 + 2f * tree;
                                 float treeZ = -3 + tree * 0.05f;
-                                Instantiate(treePrefs[Random.Range(0, treePrefs.Length)], new Vector3(treeX, treeY, treeZ), Quaternion.identity, objectParent);
+                                SpriteRenderer instTreeSprite = Instantiate(treePref, new Vector3(treeX, treeY, treeZ), Quaternion.identity, objectParent).GetComponent<SpriteRenderer>();
+                                instTreeSprite.sprite = treeSprites[Random.Range(0, treeSprites.Length)];
                             }
                         }
                     }
@@ -137,7 +143,8 @@ public class LevelController : MonoBehaviour
         while (player.alive)
         {
             float percentage = Mathf.Min(100, Mathf.Round((Time.time - startingTime) / totalTime * 100));
-            percentageText.text = "Porcentaje\n" + percentage + "%";
+            progressText.text = percentage + "%";
+            currentProgress.sizeDelta = new Vector2(percentage * PROGRESS_BAR_WIDTH / 100, currentProgress.sizeDelta.y);
             yield return new WaitForSeconds(0.1f);
         }
     }

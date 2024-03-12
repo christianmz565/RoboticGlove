@@ -10,20 +10,24 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Text scoreText;
     [SerializeField] private Sprite[] sprites;
     [SerializeField] private GameObject gameOverText;
+    private const int MAX_SMOKE = 30;
+    private int health = 5;
     private AudioSource carAudio;
     private ParticleSystem smoke;
+    private ParticleSystem.EmissionModule emission;
 
     private Vector3[] positions = {
-        new(-GameSettings.Width / 2, -2.5f, -3),
-        new(-GameSettings.Width / 2 + GameSettings.Width / 3, -2.5f, -3),
-        new(-GameSettings.Width / 2 + 2 * GameSettings.Width / 3, -2.5f, -3),
-        new(-GameSettings.Width / 2 + 3 * GameSettings.Width / 3, -2.5f, -3)
+        new(-GameSettings.Width / 2, -3.5f, -3),
+        new(-GameSettings.Width / 2 + GameSettings.Width / 3, -3.5f, -3),
+        new(-GameSettings.Width / 2 + 2 * GameSettings.Width / 3, -3.5f, -3),
+        new(-GameSettings.Width / 2 + 3 * GameSettings.Width / 3, -3.5f, -3)
     };
 
     // Start is called before the first frame update
     void Start()
     {
         smoke = GetComponentInChildren<ParticleSystem>();
+        emission = smoke.emission;
         carAudio = GetComponent<AudioSource>();
         carAudio.volume = PlayerPrefs.GetInt("volume") / 100.0f;
         GetComponentInChildren<SpriteRenderer>().sprite = sprites[Random.Range(0, sprites.Length)];
@@ -41,32 +45,35 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.D))
         {
             currentColumn = 0;
-            Debug.Log("Key D pressed");
         }
         else if (Input.GetKeyDown(KeyCode.F))
         {
             currentColumn = 1;
-            Debug.Log("Key F pressed");
         }
         else if (Input.GetKeyDown(KeyCode.J))
         {
             currentColumn = 2;
-            Debug.Log("Key J pressed");
         }
         else if (Input.GetKeyDown(KeyCode.K))
         {
             currentColumn = 3;
-            Debug.Log("Key K pressed");
         }
 
         transform.position = positions[currentColumn];
     }
 
-    public void Hurt()
+    public bool Hurt()
     {
-        alive = false;
-        GameSettings.ScrollSpeed = 0;
+        health--;
+        if (health <= 0)
+        {
+            alive = false;
+            GameSettings.ScrollSpeed = 0;
+            return true;
+        }
+        emission.rateOverTime = MAX_SMOKE / health;
         smoke.Play();
+        return false;
     }
 
     public void Score(float points)

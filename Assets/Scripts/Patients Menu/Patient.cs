@@ -12,7 +12,11 @@ public class Patient
     public Patient(string name)
     {
         this.name = name;
-        scoresByDay = new();
+        score = 0;
+        scoresByDay = new()
+        {
+            new DayScore(GenerateDateKey(DateTime.Now))
+        };
     }
 
     public string GetName()
