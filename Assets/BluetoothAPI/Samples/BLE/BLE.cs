@@ -7,23 +7,27 @@ using UnityEngine.Android;
 public class BLE : MonoBehaviour
 {
     private BluetoothHelper helper;
-    private static string serviceUUID = "FFA0";
-    private static string characteristicUUID = "FFA1";
+    private static string serviceUUID = "4f7c0630-0059-408d-9acd-e04553c7b60a";
+    private static string characteristicUUIDfxMiddle = "4f7c0632-0059-408d-9acd-e04553c7b60";
     private BluetoothHelperCharacteristic bluetoothHelperCharacteristic;
     void Start()
     {
         BluetoothHelper.BLE = true;
-        helper = BluetoothHelper.GetInstance("raspberrypi");
+        helper = BluetoothHelper.GetInstance("Papita - Soft Robotic Glove");
         helper.OnScanEnded += OnScanEnded;
         helper.OnConnected += OnConnected;
         helper.OnConnectionFailed += OnConnectionFailed;
         helper.OnCharacteristicChanged += OnCharacteristicChanged;
         helper.OnCharacteristicNotFound += OnCharacteristicNotFound;
         helper.OnServiceNotFound += OnServiceNotFound;
+        helper.OnCharacteristicChanged += (helper, value, characteristic) =>
+        {
+            Debug.Log(value);
+        };
         helper.ScanNearbyDevices();
         
         Permission.RequestUserPermission(Permission.CoarseLocation);
-        bluetoothHelperCharacteristic = new BluetoothHelperCharacteristic(characteristicUUID, serviceUUID);
+        bluetoothHelperCharacteristic = new BluetoothHelperCharacteristic(characteristicUUIDfxMiddle, serviceUUID);
     }
 
     void OnScanEnded(BluetoothHelper helper, LinkedList<BluetoothDevice> devices)
