@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using System.Reflection;
 using ArduinoBluetoothAPI;
 using UnityEngine.Android;
 
@@ -10,6 +11,7 @@ public class PlayerController : MonoBehaviour
 {
     public float score = 0;
     public string caption = "";
+    
     public int currentColumn;
     public bool alive = true;
     [SerializeField] private Text scoreText;
@@ -24,8 +26,14 @@ public class PlayerController : MonoBehaviour
     //Bluethoot Variables
     private BluetoothHelper helper;
     private static string serviceUUID = "4f7c0630-0059-408d-9acd-e04553c7b60a";
-    private static string characteristicUUIDfxMiddle = "4f7c0632-0059-408d-9acd-e04553c7b60";
-    private BluetoothHelperCharacteristic bluetoothHelperCharacteristic;
+    private static string characteristicUUIDfx1 = "4f7c0631-0059-408d-9acd-e04553c7b60a";
+    private static string characteristicUUIDfx2 = "4f7c0632-0059-408d-9acd-e04553c7b60a";
+    private static string characteristicUUIDfx3 = "4f7c0633-0059-408d-9acd-e04553c7b60a";
+    private static string characteristicUUIDfx4 = "4f7c0634-0059-408d-9acd-e04553c7b60a";
+    private BluetoothHelperCharacteristic bluetoothHelperCharacteristicfx1;
+    private BluetoothHelperCharacteristic bluetoothHelperCharacteristicfx2;
+    private BluetoothHelperCharacteristic bluetoothHelperCharacteristicfx3;
+    private BluetoothHelperCharacteristic bluetoothHelperCharacteristicfx4;
 
     private Vector3[] positions = {
         new(-GameSettings.Width / 2, -3.5f, -3),
@@ -60,7 +68,6 @@ public class PlayerController : MonoBehaviour
         //};
         helper.ScanNearbyDevices();
         Permission.RequestUserPermission(Permission.CoarseLocation);
-        bluetoothHelperCharacteristic = new BluetoothHelperCharacteristic(characteristicUUIDfxMiddle, serviceUUID);
         //caption = helper.Read();
         //helper.ReadCharacteristic(bluetoothHelperCharacteristic);
     }
@@ -68,19 +75,18 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("Update");
         if (alive)
             Move();
-
+        if (helper != null){
+            helper.ReadCharacteristic(bluetoothHelperCharacteristicfx1);
+        }
         // remove this
         if (Input.GetKeyDown(KeyCode.F7))
             Time.timeScale = 2.5f;
-        Debug.Log("-Update");
     }
 
     void Move()
     {
-        Debug.Log("Move");
         if (Input.GetKeyDown(KeyCode.D))
         {
             currentColumn = 0;
@@ -99,7 +105,6 @@ public class PlayerController : MonoBehaviour
         }
 
         transform.position = positions[currentColumn];
-        Debug.Log("-Move");
     }
 
     public bool Hurt()
@@ -150,24 +155,36 @@ public class PlayerController : MonoBehaviour
                 Debug.Log($"Characteristic : [{c.getName()}]");
             }
         }
-        helper.Subscribe(bluetoothHelperCharacteristic);
-        Debug.Log("-OnConnected");
+        bluetoothHelperCharacteristicfx1 = new BluetoothHelperCharacteristic(characteristicUUIDfx1, serviceUUID);
+        helper.Subscribe(bluetoothHelperCharacteristicfx1);
+        /*
+        bluetoothHelperCharacteristicfx2 = new BluetoothHelperCharacteristic(characteristicUUIDfx2, serviceUUID);
+        bluetoothHelperCharacteristicfx3 = new BluetoothHelperCharacteristic(characteristicUUIDfx3, serviceUUID);
+        bluetoothHelperCharacteristicfx4 = new BluetoothHelperCharacteristic(characteristicUUIDfx4, serviceUUID);
+        helper.Subscribe(bluetoothHelperCharacteristicfx2);
+        helper.Subscribe(bluetoothHelperCharacteristicfx3);
+        helper.Subscribe(bluetoothHelperCharacteristicfx4);
+        */
+        Debug.Log("Si nos logramos conectar y suscribir");
     }
 
     void OnConnectionFailed(BluetoothHelper helper)
     {
         Debug.Log("OnConnectionFailed");
-        Debug.Log("Connection failed");
         helper.ScanNearbyDevices();
         Debug.Log("-OnConnectionFailed");
     }
 
     void OnCharacteristicChanged(BluetoothHelper helper, byte[] data, BluetoothHelperCharacteristic characteristic)
     {
-        Debug.Log("OnCharacteristicChanged");
-        Debug.Log($"Update valud for characteristic [{characteristic.getName()}] of service [{characteristic.getService()}]");
-        Debug.Log($"New value : [{System.Text.Encoding.ASCII.GetString(data)}]");
-        Debug.Log("-OnCharacteristicChanged");
+        //Debug.Log($"Update valud for characteristic [{characteristic.getName()}] of service [{characteristic.getService()}]");
+        //Debug.Log($"New value : [{System.Text.Encoding.ASCII.GetString(data)}]");
+        caption = System.Text.Encoding.ASCII.GetString(data);
+        string strBytes = "";
+        foreach(byte b in data){
+            strBytes += "|" + b;
+        }
+        Debug.Log("strBytexByte: " + strBytes);
     }
 
     void OnServiceNotFound(BluetoothHelper helper, string service)
@@ -183,14 +200,14 @@ public class PlayerController : MonoBehaviour
         Debug.Log($"Characteristic [{service}] of service [{service}] not found");
         Debug.Log("-OnCharacteristicNotFound");
     }
-
+/*
     public void Write(string data)
     {
         Debug.Log("Write");
         helper.WriteCharacteristic(bluetoothHelperCharacteristic, data);
         Debug.Log("-Write");
     }
-
+*/
     void OnDestroy()
     {
         Debug.Log("OnDestroy");
