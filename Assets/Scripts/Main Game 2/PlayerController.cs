@@ -11,7 +11,6 @@ public class PlayerController : MonoBehaviour
 {
     public float score = 0;
     public string caption = "";
-    
     public int currentColumn;
     public bool alive = true;
     [SerializeField] private Text scoreText;
@@ -21,6 +20,7 @@ public class PlayerController : MonoBehaviour
     private int health = 5;
     private float basePitch;
     private AudioSource carAudio;
+    private SpriteRenderer healthSprite;
     private ParticleSystem smoke;
     private ParticleSystem.EmissionModule emission;
     //Bluethoot Variables
@@ -46,12 +46,19 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         Debug.Log("Game started");
-        smoke = GetComponentInChildren<ParticleSystem>();
+        Transform smokeObject = transform.Find("Smoke");
+        Transform spriteObject = transform.Find("Sprite");
+        Transform healthObject = transform.Find("Health");
+
+        smoke = smokeObject.GetComponent<ParticleSystem>();
         emission = smoke.emission;
+
         carAudio = GetComponent<AudioSource>();
         basePitch = carAudio.pitch;
         carAudio.volume = PlayerPrefs.GetInt("volume") / 100.0f;
-        GetComponentInChildren<SpriteRenderer>().sprite = sprites[Random.Range(0, sprites.Length)];
+        
+        spriteObject.GetComponent<SpriteRenderer>().sprite = sprites[Random.Range(0, sprites.Length)];
+        healthSprite = healthObject.GetComponent<SpriteRenderer>();
 
         //Bluethoot Configuration
         BluetoothHelper.BLE = true;
@@ -77,12 +84,8 @@ public class PlayerController : MonoBehaviour
     {
         if (alive)
             Move();
-        if (helper != null){
-            helper.ReadCharacteristic(bluetoothHelperCharacteristicfx1);
-        }
-        // remove this
-        if (Input.GetKeyDown(KeyCode.F7))
-            Time.timeScale = 2.5f;
+            
+        helper?.ReadCharacteristic(bluetoothHelperCharacteristicfx1);
     }
 
     void Move()
@@ -120,6 +123,7 @@ public class PlayerController : MonoBehaviour
         }
         emission.rateOverTime = MAX_SMOKE / health;
         carAudio.pitch = basePitch - (5 - health) * 0.1f;
+        healthSprite.size = new Vector2(2.5f * health, 2.5f);
         smoke.Play();
         Debug.Log("-HurtFalse");
         return false;
