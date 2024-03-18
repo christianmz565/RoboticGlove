@@ -11,7 +11,7 @@ n pass 1 30.5 2.7
 n extra 3 35.5
 n obstacle 1 38.4
 n obstacle 2 38.4
-n extra 0 43.2
+n extra 0 41.2
 n pass 3 43.7 2.6
 n obstacle 3 50.5
 n obstacle 2 50.5
@@ -32,7 +32,7 @@ n extra 3 74.5
 n obstacle 3 78.4
 n obstacle 0 78.4
 n extra 1 78.4
-t obstacle 0 82.2
+n obstacle 0 82.2
 n obstacle 2 82.2
 n obstacle 1 82.2
 n pass 2 86.6 2.7
