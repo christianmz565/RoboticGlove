@@ -6,7 +6,7 @@ n obstacle 3 19.4
 n obstacle 0 26.4
 n obstacle 1 26.4
 n obstacle 2 26.4
-t extra 2 32.4
+n extra 2 32.4
 n extra 3 36.4
 n extra 1 40.4
 n extra 0 44.4

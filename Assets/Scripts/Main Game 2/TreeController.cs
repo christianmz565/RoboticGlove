@@ -24,7 +24,7 @@ public class TreeController : MonoBehaviour
             if (treeTransform.position.y < -8)
             {
                 Vector3 pos = treeTransform.position;
-                pos.y = 30;
+                pos.y = 60;
                 treeTransform.position = pos;
                 queue.Enqueue(treeTransform);
             }

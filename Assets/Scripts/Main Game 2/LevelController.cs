@@ -84,7 +84,8 @@ public class LevelController : MonoBehaviour
                             instNotPass.GetComponent<SpriteRenderer>().size = new Vector2(10.3f, height);
                             instNotPass.GetComponent<BoxCollider2D>().size = new Vector2(2.5f, height);
 
-                            int maxTrees = (int)(scale / 2f) + 1;
+                            int maxTrees = (int)(scale / 2f);
+                            if (maxTrees == 0) maxTrees = 1;
                             for (int tree = 0; tree < maxTrees; tree++)
                             {
                                 float var = Random.Range(-1f, 1f);
@@ -98,19 +99,19 @@ public class LevelController : MonoBehaviour
                     }
 
                     if (args[0] == "t")
-                        StartCoroutine(tutorial.SlowDown(column));
+                        StartCoroutine(tutorial.SlowDown(column, false));
                     break;
                 case "obstacle":
                     Instantiate(obstaclePref, new Vector2(posX, 7), Quaternion.identity, objectParent);
 
                     if (args[0] == "t")
-                        StartCoroutine(tutorial.SlowDown(column == 0 ? 1 : 0));
+                        StartCoroutine(tutorial.SlowDown(column, true));
                     break;
                 case "extra":
                     Instantiate(extraPref, new Vector2(posX, 7), Quaternion.identity, objectParent);
 
                     if (args[0] == "t")
-                        StartCoroutine(tutorial.SlowDown(column));
+                        StartCoroutine(tutorial.SlowDown(column, false));
                     break;
                 case "goal":
                     Instantiate(goalPref, new Vector2(0, 7), Quaternion.identity, objectParent);
@@ -132,7 +133,8 @@ public class LevelController : MonoBehaviour
 
         float pointValue = 3500;
         float difficultyMult = GameSettings.DifficultyG2 * 0.3f + 1;
-        player.Score(pointValue * difficultyMult * (player.alive ? 1 : 0));
+        float healthMult = player.alive ? player.health * 0.2f + 1 : 0;
+        player.Score(pointValue * difficultyMult * healthMult);
 
         scoreAudio.Play();
         results.GetComponent<Animator>().Play("ResultsAnimIn");

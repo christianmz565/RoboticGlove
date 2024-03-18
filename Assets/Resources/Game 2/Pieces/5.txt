@@ -1,7 +1,7 @@
 ignored
-n obstacle 1 4.7
-n obstacle 2 4.7
-n extra 0 4.7
-n obstacle 3 7.1
-n obstacle 0 7.1
-n extra 1 7.1
+n obstacle 1 2.7
+n obstacle 2 2.7
+n extra 0 2.7
+n obstacle 3 5.1
+n obstacle 0 5.1
+n extra 1 5.1

@@ -21,6 +21,7 @@ public class LevelG2Generator : MonoBehaviour
             timeText.gameObject.SetActive(true);
             StartCoroutine(StartLevel());
             StartCoroutine(AddTime());
+            StartCoroutine(SpeedUp());
             StartCoroutine(CalculateScoreAndEnd());
         }
 
@@ -74,5 +75,14 @@ public class LevelG2Generator : MonoBehaviour
 
         GameSettings.patient.AddScore(player.score);
         GameSettings.patient.SavePatient();
+    }
+
+    private IEnumerator SpeedUp()
+    {
+        while (player.alive)
+        {
+            yield return new WaitForSeconds(20);
+            GameSettings.ScrollSpeed += 0.1f * GameSettings.DifficultyG2;
+        }
     }
 }
