@@ -251,12 +251,12 @@ public class PlayerController : MonoBehaviour
     void OnDestroy()
     {
         Debug.Log("OnDestroy");
-        //helper.OnScanEnded -= OnScanEnded;
-        //helper.OnConnected -= OnConnected;
-        //helper.OnConnectionFailed -= OnConnectionFailed;
-        //helper.OnCharacteristicChanged -= OnCharacteristicChanged;
-        //helper.OnCharacteristicNotFound -= OnCharacteristicNotFound;
-        //helper.OnServiceNotFound -= OnServiceNotFound;
-        //helper.Disconnect();
+        helper.OnScanEnded -= OnScanEnded;
+        helper.OnConnected -= OnConnected;
+        helper.OnConnectionFailed -= OnConnectionFailed;
+        helper.OnCharacteristicChanged -= OnCharacteristicChanged;
+        helper.OnCharacteristicNotFound -= OnCharacteristicNotFound;
+        helper.OnServiceNotFound -= OnServiceNotFound;
+        helper.Disconnect();
     }
 }
