@@ -8,6 +8,12 @@ public class HandController : MonoBehaviour
     private NodeController pickedNode;
     private Vector2 previousNodePos;
     private bool isHolding = false;
+    //Bluethoot controladores 
+    private static string serviceUUID = "4f7c0630-0059-408d-9acd-e04553c7b60a";
+    private static string characteristicUUIDfx1 = "4f7c0631-0059-408d-9acd-e04553c7b60a";
+    private static string characteristicUUIDfx2 = "4f7c0632-0059-408d-9acd-e04553c7b60a";
+    private static string characteristicUUIDfx3 = "4f7c0633-0059-408d-9acd-e04553c7b60a";
+    private static string characteristicUUIDfx4 = "4f7c0634-0059-408d-9acd-e04553c7b60a";
 
     // Start is called before the first frame update
     void Start()

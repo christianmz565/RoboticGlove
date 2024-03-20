@@ -10,7 +10,10 @@ using UnityEngine.Android;
 public class PlayerController : MonoBehaviour
 {
     public float score = 0;
-    public string caption = "";
+    public byte caption1 = 0;
+    public byte caption2 = 0;
+    public byte caption3 = 0;
+    public byte caption4 = 0;
     
     public int currentColumn;
     public bool alive = true;
@@ -22,18 +25,19 @@ public class PlayerController : MonoBehaviour
     private float basePitch;
     private AudioSource carAudio;
     private ParticleSystem smoke;
+    //private float baseCooldown = 1;
+    //private float cooldown = 1;
     private ParticleSystem.EmissionModule emission;
     //Bluethoot Variables
     private BluetoothHelper helper;
     private static string serviceUUID = "4f7c0630-0059-408d-9acd-e04553c7b60a";
-    private static string characteristicUUIDfx1 = "4f7c0631-0059-408d-9acd-e04553c7b60a";
-    private static string characteristicUUIDfx2 = "4f7c0632-0059-408d-9acd-e04553c7b60a";
-    private static string characteristicUUIDfx3 = "4f7c0633-0059-408d-9acd-e04553c7b60a";
-    private static string characteristicUUIDfx4 = "4f7c0634-0059-408d-9acd-e04553c7b60a";
+    private static string characteristicUUIDfx5 = "4f7c0635-0059-408d-9acd-e04553c7b60a";
     private BluetoothHelperCharacteristic bluetoothHelperCharacteristicfx1;
     private BluetoothHelperCharacteristic bluetoothHelperCharacteristicfx2;
     private BluetoothHelperCharacteristic bluetoothHelperCharacteristicfx3;
     private BluetoothHelperCharacteristic bluetoothHelperCharacteristicfx4;
+    private BluetoothHelperCharacteristic bluetoothHelperCharacteristicfx5;
+
 
     private Vector3[] positions = {
         new(-GameSettings.Width / 2, -3.5f, -3),
@@ -75,10 +79,18 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(" UPDATE ");
         if (alive)
             Move();
-        if (helper != null){
-            helper.ReadCharacteristic(bluetoothHelperCharacteristicfx1);
+        if (helper != null && bluetoothHelperCharacteristicfx5 != null){
+            Debug.Log("");
+            helper.ReadCharacteristic(bluetoothHelperCharacteristicfx5);
+            /*
+            helper.ReadCharacteristic(bluetoothHelperCharacteristicfx2);
+            helper.ReadCharacteristic(bluetoothHelperCharacteristicfx3);
+            helper.ReadCharacteristic(bluetoothHelperCharacteristicfx4);
+            */
+            Debug.Log(caption1 + " / " + caption2 + " / " + caption3 + " / " + caption4 + " CC: " + currentColumn);
         }
         // remove this
         if (Input.GetKeyDown(KeyCode.F7))
@@ -87,6 +99,7 @@ public class PlayerController : MonoBehaviour
 
     void Move()
     {
+        /*
         if (Input.GetKeyDown(KeyCode.D))
         {
             currentColumn = 0;
@@ -103,8 +116,35 @@ public class PlayerController : MonoBehaviour
         {
             currentColumn = 3;
         }
+        */
+        if (helper != null && bluetoothHelperCharacteristicfx5 != null){
+            if (caption1>27){
+                currentColumn = 0;
+            }
+            else if (caption2>45){
+                currentColumn = 1;
+            }
+            else if (caption3>80){
+                currentColumn = 2;
+            }
+            else if (caption4>45){
+                currentColumn = 3;
+            }
+        }
 
         transform.position = positions[currentColumn];
+
+        /*
+        cooldown -= Time.deltaTime;
+        if (cooldown <= 0 && int.Parse(strBytesAct) > 80){
+            if (currentColumn == 3)
+                currentColumn = 0;
+            else
+                currentColumn++;
+            cooldown = baseCooldown;
+        }
+        transform.position = positions[currentColumn];
+        */
     }
 
     public bool Hurt()
@@ -129,7 +169,7 @@ public class PlayerController : MonoBehaviour
     {
         Debug.Log("Score");
         score += points;
-        scoreText.text = "Puntaje\n" + score + " " + caption;
+        scoreText.text = "Puntaje\n" + score;
         Debug.Log("-Score");
     }
 
@@ -155,16 +195,8 @@ public class PlayerController : MonoBehaviour
                 Debug.Log($"Characteristic : [{c.getName()}]");
             }
         }
-        bluetoothHelperCharacteristicfx1 = new BluetoothHelperCharacteristic(characteristicUUIDfx1, serviceUUID);
-        helper.Subscribe(bluetoothHelperCharacteristicfx1);
-        /*
-        bluetoothHelperCharacteristicfx2 = new BluetoothHelperCharacteristic(characteristicUUIDfx2, serviceUUID);
-        bluetoothHelperCharacteristicfx3 = new BluetoothHelperCharacteristic(characteristicUUIDfx3, serviceUUID);
-        bluetoothHelperCharacteristicfx4 = new BluetoothHelperCharacteristic(characteristicUUIDfx4, serviceUUID);
-        helper.Subscribe(bluetoothHelperCharacteristicfx2);
-        helper.Subscribe(bluetoothHelperCharacteristicfx3);
-        helper.Subscribe(bluetoothHelperCharacteristicfx4);
-        */
+        bluetoothHelperCharacteristicfx5 = new BluetoothHelperCharacteristic(characteristicUUIDfx5, serviceUUID);
+        helper.Subscribe(bluetoothHelperCharacteristicfx5);
         Debug.Log("Si nos logramos conectar y suscribir");
     }
 
@@ -179,12 +211,20 @@ public class PlayerController : MonoBehaviour
     {
         //Debug.Log($"Update valud for characteristic [{characteristic.getName()}] of service [{characteristic.getService()}]");
         //Debug.Log($"New value : [{System.Text.Encoding.ASCII.GetString(data)}]");
-        caption = System.Text.Encoding.ASCII.GetString(data);
-        string strBytes = "";
+        //caption = System.Text.Encoding.ASCII.GetString(data);
+        int i = 0;
         foreach(byte b in data){
-            strBytes += "|" + b;
+            if (i==0){
+                caption1 = b;
+            } else if (i==1){
+                caption2 = b;
+            } else if (i==2){
+                caption3 = b;
+            }else if (i==3){
+                caption4 = b;
+            }
+            i++;
         }
-        Debug.Log("strBytexByte: " + strBytes);
     }
 
     void OnServiceNotFound(BluetoothHelper helper, string service)
