@@ -3,22 +3,41 @@ using ArduinoBluetoothAPI;
 using UnityEngine;
 using UnityEngine.Android;
 
-public abstract class BluetoothManager : MonoBehaviour
+public class BluetoothManager : MonoBehaviour
 {
-    //Bluethoot Variables
+    public byte[] captions = new byte[4];
+    public string game;
     private BluetoothHelper helper;
+    private Dictionary<string, int[]> gameCharacteristics = new()
+    {
+        { "1", new int[] { 0, 1, 2, 3, 4 }},
+        { "2", new int[] { 4 }}
+    };
     private const string serviceUUID = "4f7c0630-0059-408d-9acd-e04553c7b60a";
-    private const string characteristicUUIDfx1 = "4f7c0631-0059-408d-9acd-e04553c7b60a";
-    private const string characteristicUUIDfx2 = "4f7c0632-0059-408d-9acd-e04553c7b60a";
-    private const string characteristicUUIDfx3 = "4f7c0633-0059-408d-9acd-e04553c7b60a";
-    private const string characteristicUUIDfx4 = "4f7c0634-0059-408d-9acd-e04553c7b60a";
-    private BluetoothHelperCharacteristic bluetoothHelperCharacteristicfx1;
-    private BluetoothHelperCharacteristic bluetoothHelperCharacteristicfx2;
-    private BluetoothHelperCharacteristic bluetoothHelperCharacteristicfx3;
-    private BluetoothHelperCharacteristic bluetoothHelperCharacteristicfx4;
+    private string[] characteristicUUIDs = new string[]
+    {
+        "4f7c0631-0059-408d-9acd-e04553c7b60a",
+        "4f7c0632-0059-408d-9acd-e04553c7b60a",
+        "4f7c0633-0059-408d-9acd-e04553c7b60a",
+        "4f7c0634-0059-408d-9acd-e04553c7b60a",
+        "4f7c0635-0059-408d-9acd-e04553c7b60a"
+    };
+    private List<BluetoothHelperCharacteristic> bluetoothHelperCharacteristics = new();
+    private static BluetoothManager instance;
 
     void Start()
     {
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+
+
         //Bluethoot Configuration
         BluetoothHelper.BLE = true;
         helper = BluetoothHelper.GetInstance("Papita - Soft Robotic Glove");
@@ -38,9 +57,19 @@ public abstract class BluetoothManager : MonoBehaviour
         //helper.ReadCharacteristic(bluetoothHelperCharacteristic);
     }
 
-    void Update()
+    public void Update()
     {
-        helper?.ReadCharacteristic(bluetoothHelperCharacteristicfx1);
+        if (helper != null)
+        {
+            foreach (BluetoothHelperCharacteristic characteristic in bluetoothHelperCharacteristics)
+            {
+                if (characteristic != null)
+                {
+                    helper.ReadCharacteristic(characteristic);
+                    Debug.Log(captions[0] + "/" + captions[1] + "/" + captions[2] + "/" + captions[3] + "/" + captions[4]);
+                }
+            }
+        }
     }
 
     private void OnScanEnded(BluetoothHelper helper, LinkedList<BluetoothDevice> devices)
@@ -65,17 +94,12 @@ public abstract class BluetoothManager : MonoBehaviour
                 Debug.Log($"Characteristic : [{c.getName()}]");
             }
         }
-        bluetoothHelperCharacteristicfx1 = new BluetoothHelperCharacteristic(characteristicUUIDfx1, serviceUUID);
-        helper.Subscribe(bluetoothHelperCharacteristicfx1);
-        /*
-        bluetoothHelperCharacteristicfx2 = new BluetoothHelperCharacteristic(characteristicUUIDfx2, serviceUUID);
-        bluetoothHelperCharacteristicfx3 = new BluetoothHelperCharacteristic(characteristicUUIDfx3, serviceUUID);
-        bluetoothHelperCharacteristicfx4 = new BluetoothHelperCharacteristic(characteristicUUIDfx4, serviceUUID);
-        helper.Subscribe(bluetoothHelperCharacteristicfx2);
-        helper.Subscribe(bluetoothHelperCharacteristicfx3);
-        helper.Subscribe(bluetoothHelperCharacteristicfx4);
-        */
-        Debug.Log("Si nos logramos conectar y suscribir");
+
+        foreach (int current in gameCharacteristics[game])
+        {
+            BluetoothHelperCharacteristic characteristic = new(characteristicUUIDs[current], serviceUUID);
+            bluetoothHelperCharacteristics.Add(characteristic);
+        }
     }
 
     private void OnConnectionFailed(BluetoothHelper helper)
@@ -90,25 +114,11 @@ public abstract class BluetoothManager : MonoBehaviour
         //Debug.Log($"Update valud for characteristic [{characteristic.getName()}] of service [{characteristic.getService()}]");
         //Debug.Log($"New value : [{System.Text.Encoding.ASCII.GetString(data)}]");
         //caption = System.Text.Encoding.ASCII.GetString(data);
-        string strBytes = "";
-        foreach (byte b in data)
-        {
-            strBytes += b + "";
-        }
-        Debug.Log("strBytexByte: " + strBytes);
-        
-        // Por si solo funciona un dedo
-        PerformAction(strBytes);
 
-        // Por si hay varios dedos, imagino tendran un identificador
-        string aaa = "tambien revisen este separador no lo dejo como comentario por que no lo leerian";
-        string[] set = strBytes.Split(':');
-        PerformAction(set[0], set[1]);
+        // no dire absolutamente nada sobre el bucle que habia aqui
+        for (int i = 0; i < data.Length; i++)
+            captions[i] = data[i];
     }
-
-    protected abstract void PerformAction(string data);
-
-    protected abstract void PerformAction(string id, string data);
 
     private void OnServiceNotFound(BluetoothHelper helper, string service)
     {
@@ -134,13 +144,13 @@ public abstract class BluetoothManager : MonoBehaviour
     private void OnDestroy()
     {
         Debug.Log("OnDestroy");
-        //helper.OnScanEnded -= OnScanEnded;
-        //helper.OnConnected -= OnConnected;
-        //helper.OnConnectionFailed -= OnConnectionFailed;
-        //helper.OnCharacteristicChanged -= OnCharacteristicChanged;
-        //helper.OnCharacteristicNotFound -= OnCharacteristicNotFound;
-        //helper.OnServiceNotFound -= OnServiceNotFound;
-        //helper.Disconnect();
+        helper.OnScanEnded -= OnScanEnded;
+        helper.OnConnected -= OnConnected;
+        helper.OnConnectionFailed -= OnConnectionFailed;
+        helper.OnCharacteristicChanged -= OnCharacteristicChanged;
+        helper.OnCharacteristicNotFound -= OnCharacteristicNotFound;
+        helper.OnServiceNotFound -= OnServiceNotFound;
+        helper.Disconnect();
     }
 }
 

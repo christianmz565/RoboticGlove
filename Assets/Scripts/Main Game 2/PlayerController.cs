@@ -19,7 +19,7 @@ public class PlayerController : MonoBehaviour
     private SpriteRenderer healthSprite;
     private ParticleSystem smoke;
     private ParticleSystem.EmissionModule emission;
-    private BluetoothPlayer bluetoothPlayer;
+    private BluetoothManager bluetoothPlayer;
 
     private Vector3[] positions = {
         new(-GameSettings.Width / 2, -3.5f, -3),
@@ -27,61 +27,6 @@ public class PlayerController : MonoBehaviour
         new(-GameSettings.Width / 2 + 2 * GameSettings.Width / 3, -3.5f, -3),
         new(-GameSettings.Width / 2 + 3 * GameSettings.Width / 3, -3.5f, -3)
     };
-
-    public class BluetoothPlayer : BluetoothManager
-    {
-        public float timer = 0.5f;
-        private PlayerController player;
-
-        public BluetoothPlayer(PlayerController player)
-        {
-            this.player = player;
-        }
-
-        protected override void PerformAction(string data)
-        {
-            // Por si solo funciona un dedo
-            int value = int.Parse(data);
-            if (timer <= 0 && value >= 80)
-            {
-                player.currentColumn++;
-                if (player.currentColumn == 3)
-                    player.currentColumn = 0;
-
-                timer = 0.5f;
-            }
-        }
-
-        private Dictionary<string, int> ids = new(){
-            {"por favor por favor por favor revisen que estos esten bien si no seria doloroso", 47},
-            
-            {"index", 0},
-            {"heart", 1},
-            {"ring", 2},
-            {"pinky", 3}
-        };
-
-        private int[] fingerValues = new int[4];
-
-        protected override void PerformAction(string id, string data)
-        {
-            // Por si hay varios dedos, imagino tendran un identificador
-            int value = int.Parse(data);
-            fingerValues[ids[id]] = value;
-
-            // Siempre nos movemos al dedo mas flexionado
-            if (!fingerValues.Contains(0))
-            {
-                int maxIdx = 0;
-                for (int i = 0; i < 4; i++)
-                    if (fingerValues[i] > fingerValues[maxIdx])
-                        maxIdx = i;
-
-                player.currentColumn = maxIdx;
-                fingerValues = new int[4];
-            }
-        }
-    }
 
     // Start is called before the first frame update
     void Start()
@@ -101,7 +46,7 @@ public class PlayerController : MonoBehaviour
         spriteObject.GetComponent<SpriteRenderer>().sprite = sprites[Random.Range(0, sprites.Length)];
         healthSprite = healthObject.GetComponent<SpriteRenderer>();
 
-        bluetoothPlayer = new(this);
+        bluetoothPlayer = GameObject.Find("BluetoothManager").GetComponent<BluetoothManager>();
     }
 
     // Update is called once per frame
@@ -109,15 +54,14 @@ public class PlayerController : MonoBehaviour
     {
         if (alive)
         {
-            bluetoothPlayer.timer -= Time.deltaTime;
+            Move();
             transform.position = positions[currentColumn];
         }
     }
 
-    string aaa = "Aca esta el move antiguo, si se le necesita solo hagan la llamada en el update";
     void Move()
     {
-        if (Input.GetKeyDown(KeyCode.D))
+        /*if (Input.GetKeyDown(KeyCode.D))
         {
             currentColumn = 0;
         }
@@ -130,6 +74,23 @@ public class PlayerController : MonoBehaviour
             currentColumn = 2;
         }
         else if (Input.GetKeyDown(KeyCode.K))
+        {
+            currentColumn = 3;
+        }*/
+
+        if (bluetoothPlayer.captions[0] > 27)
+        {
+            currentColumn = 0;
+        }
+        else if (bluetoothPlayer.captions[0] > 45)
+        {
+            currentColumn = 1;
+        }
+        else if (bluetoothPlayer.captions[0] > 80)
+        {
+            currentColumn = 2;
+        }
+        else if (bluetoothPlayer.captions[0] > 45)
         {
             currentColumn = 3;
         }
