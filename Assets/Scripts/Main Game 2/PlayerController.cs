@@ -6,6 +6,8 @@ using System.Text;
 using System.Reflection;
 using ArduinoBluetoothAPI;
 using UnityEngine.Android;
+using System.IO;
+using SystemDateTime = System.DateTime;
 
 public class PlayerController : MonoBehaviour
 {
@@ -14,6 +16,9 @@ public class PlayerController : MonoBehaviour
     public byte caption2 = 0;
     public byte caption3 = 0;
     public byte caption4 = 0;
+
+    private FileStream infoFile;
+    private StreamWriter infoFileWriter;
     
     public int currentColumn;
     public bool alive = true;
@@ -74,14 +79,54 @@ public class PlayerController : MonoBehaviour
         Permission.RequestUserPermission(Permission.CoarseLocation);
         //caption = helper.Read();
         //helper.ReadCharacteristic(bluetoothHelperCharacteristic);
+
+        string infoFilePath = "";
+        bool fileExists = false;
+
+        for(int i = 1; !fileExists; i++){
+            //Persistent data path
+            infoFilePath = Application.persistentDataPath + "/gameInfoRoboticGlove_" + i + ".csv";
+            Debug.Log("infoFilePath: " + infoFilePath);
+
+            // Creating file for saving data from gloves
+            try
+            {
+                // Check if the file exists
+                if (!File.Exists(infoFilePath))
+                {
+                    // Create the file
+                    FileStream fileStream = File.Create(infoFilePath);
+                    fileStream.Close(); // Close the file stream once done
+                    Debug.Log("File created successfully.");
+                    fileExists = true;
+                }
+                else
+                {
+                    Debug.Log("File already exists.");
+                }
+            }
+            catch (IOException e)
+            {
+                Debug.LogError("Error creating file: " + e.Message);
+            }
+        }
+
+        // Filling the file
+        infoFile = File.Open(infoFilePath, FileMode.Open);
+        infoFileWriter = new StreamWriter(infoFile);
+        infoFileWriter.WriteLine("timestamp,caption1,caption2,caption3,caption4");
+        infoFileWriter.Flush();
+        infoFile.Flush();
     }
 
     // Update is called once per frame
     void Update()
     {
         Debug.Log(" UPDATE ");
-        if (alive)
+        if (alive){
             Move();
+            WriteInFile();
+        }
         if (helper != null && bluetoothHelperCharacteristicfx5 != null){
             Debug.Log("");
             helper.ReadCharacteristic(bluetoothHelperCharacteristicfx5);
@@ -127,7 +172,7 @@ public class PlayerController : MonoBehaviour
             else if (caption3>80){
                 currentColumn = 2;
             }
-            else if (caption4>45){
+            else if (caption4>61){
                 currentColumn = 3;
             }
         }
@@ -145,6 +190,20 @@ public class PlayerController : MonoBehaviour
         }
         transform.position = positions[currentColumn];
         */
+    }
+    public void WriteInFile(){
+        // Saving data in file
+        infoFileWriter.WriteLine(
+                //(SystemDateTime.Now.Ticks / SystemTimeSpan.TicksPerSecond) +
+                SystemDateTime.Now.ToString("dd-MM-yyyy hh:mm:ss.fff zzz") +
+                "," + caption1 +
+                "," + caption2 +
+                "," + caption3 +
+                "," + caption4
+            );
+        infoFileWriter.Flush();
+        infoFile.Flush();
+        Debug.Log("Writing in file . . .");
     }
 
     public bool Hurt()
@@ -251,6 +310,12 @@ public class PlayerController : MonoBehaviour
     void OnDestroy()
     {
         Debug.Log("OnDestroy");
+
+        // Saving the file
+        infoFileWriter.Close();
+        infoFile.Close();
+        Debug.Log("End Writing in file, saving the file");
+
         helper.OnScanEnded -= OnScanEnded;
         helper.OnConnected -= OnConnected;
         helper.OnConnectionFailed -= OnConnectionFailed;
