@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -55,7 +53,7 @@ public class PlayerController : MonoBehaviour
         if (alive)
         {
             Move();
-            transform.position = positions[currentColumn];
+            bluetoothPlayer.WriteInFile();
         }
     }
 
@@ -82,18 +80,19 @@ public class PlayerController : MonoBehaviour
         {
             currentColumn = 0;
         }
-        else if (bluetoothPlayer.captions[0] > 45)
+        else if (bluetoothPlayer.captions[1] > 45)
         {
             currentColumn = 1;
         }
-        else if (bluetoothPlayer.captions[0] > 80)
+        else if (bluetoothPlayer.captions[2] > 80)
         {
             currentColumn = 2;
         }
-        else if (bluetoothPlayer.captions[0] > 45)
+        else if (bluetoothPlayer.captions[3] > 61)
         {
             currentColumn = 3;
         }
+        transform.position = positions[currentColumn];
     }
 
     public bool Hurt()

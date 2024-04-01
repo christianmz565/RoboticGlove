@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using ArduinoBluetoothAPI;
 using UnityEngine;
 using UnityEngine.Android;
+using System.IO;
+using SystemDateTime = System.DateTime;
 
 public class BluetoothManager : MonoBehaviour
 {
@@ -23,6 +25,8 @@ public class BluetoothManager : MonoBehaviour
         "4f7c0635-0059-408d-9acd-e04553c7b60a"
     };
     private List<BluetoothHelperCharacteristic> bluetoothHelperCharacteristics = new();
+    private FileStream infoFile;
+    private StreamWriter infoFileWriter;
     private static BluetoothManager instance;
 
     void Start()
@@ -55,6 +59,45 @@ public class BluetoothManager : MonoBehaviour
         Permission.RequestUserPermission(Permission.CoarseLocation);
         //caption = helper.Read();
         //helper.ReadCharacteristic(bluetoothHelperCharacteristic);
+
+        string infoFilePath = "";
+        bool fileExists = false;
+
+        for (int i = 1; !fileExists; i++)
+        {
+            //Persistent data path
+            infoFilePath = Application.persistentDataPath + "/gameInfoRoboticGlove_" + i + ".csv";
+            Debug.Log("infoFilePath: " + infoFilePath);
+
+            // Creating file for saving data from gloves
+            try
+            {
+                // Check if the file exists
+                if (!File.Exists(infoFilePath))
+                {
+                    // Create the file
+                    FileStream fileStream = File.Create(infoFilePath);
+                    fileStream.Close(); // Close the file stream once done
+                    Debug.Log("File created successfully.");
+                    fileExists = true;
+                }
+                else
+                {
+                    Debug.Log("File already exists.");
+                }
+            }
+            catch (IOException e)
+            {
+                Debug.LogError("Error creating file: " + e.Message);
+            }
+        }
+
+        // Filling the file
+        infoFile = File.Open(infoFilePath, FileMode.Open);
+        infoFileWriter = new StreamWriter(infoFile);
+        infoFileWriter.WriteLine("timestamp,caption1,caption2,caption3,caption4");
+        infoFileWriter.Flush();
+        infoFile.Flush();
     }
 
     public void Update()
@@ -70,6 +113,22 @@ public class BluetoothManager : MonoBehaviour
                 }
             }
         }
+    }
+    
+    public void WriteInFile()
+    {
+        // Saving data in file
+        infoFileWriter.WriteLine(
+                //(SystemDateTime.Now.Ticks / SystemTimeSpan.TicksPerSecond) +
+                SystemDateTime.Now.ToString("dd-MM-yyyy hh:mm:ss.fff zzz") +
+                "," + captions[0] +
+                "," + captions[1] +
+                "," + captions[2] +
+                "," + captions[3]
+            );
+        infoFileWriter.Flush();
+        infoFile.Flush();
+        Debug.Log("Writing in file . . .");
     }
 
     private void OnScanEnded(BluetoothHelper helper, LinkedList<BluetoothDevice> devices)
@@ -144,6 +203,12 @@ public class BluetoothManager : MonoBehaviour
     private void OnDestroy()
     {
         Debug.Log("OnDestroy");
+
+        // Saving the file
+        infoFileWriter.Close();
+        infoFile.Close();
+        Debug.Log("End Writing in file, saving the file");
+
         helper.OnScanEnded -= OnScanEnded;
         helper.OnConnected -= OnConnected;
         helper.OnConnectionFailed -= OnConnectionFailed;
