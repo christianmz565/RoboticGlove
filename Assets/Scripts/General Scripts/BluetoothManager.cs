@@ -8,7 +8,6 @@ using SystemDateTime = System.DateTime;
 public class BluetoothManager : MonoBehaviour
 {
     public byte[] captions = new byte[4];
-    public string game;
     private BluetoothHelper helper;
     private Dictionary<string, int[]> gameCharacteristics = new()
     {
@@ -33,15 +32,57 @@ public class BluetoothManager : MonoBehaviour
     {
         if (instance != null && instance != this)
         {
+            Debug.Log("not the instance");
             Destroy(gameObject);
         }
         else
         {
             instance = this;
+            Debug.Log("yes the instance");
+            InitBluetooth();
             DontDestroyOnLoad(gameObject);
         }
 
 
+
+    }
+
+    public void Update()
+    {
+        if (helper != null)
+        {
+            foreach (BluetoothHelperCharacteristic characteristic in bluetoothHelperCharacteristics)
+            {
+                if (characteristic != null)
+                {
+                    helper.ReadCharacteristic(characteristic);
+                    Debug.Log(captions[0] + "/" + captions[1] + "/" + captions[2] + "/" + captions[3]);
+                }
+            }
+        }
+    }
+
+    public void WriteInFile()
+    {
+        if (infoFileWriter != null && infoFile != null)
+        {
+            // Saving data in file
+            infoFileWriter.WriteLine(
+                    //(SystemDateTime.Now.Ticks / SystemTimeSpan.TicksPerSecond) +
+                    SystemDateTime.Now.ToString("dd-MM-yyyy hh:mm:ss.fff zzz") +
+                    "," + captions[0] +
+                    "," + captions[1] +
+                    "," + captions[2] +
+                    "," + captions[3]
+                );
+            infoFileWriter.Flush();
+            infoFile.Flush();
+            Debug.Log("Writing in file . . .");
+        }
+    }
+
+    private void InitBluetooth()
+    {
         //Bluethoot Configuration
         BluetoothHelper.BLE = true;
         helper = BluetoothHelper.GetInstance("Papita - Soft Robotic Glove");
@@ -100,37 +141,6 @@ public class BluetoothManager : MonoBehaviour
         infoFile.Flush();
     }
 
-    public void Update()
-    {
-        if (helper != null)
-        {
-            foreach (BluetoothHelperCharacteristic characteristic in bluetoothHelperCharacteristics)
-            {
-                if (characteristic != null)
-                {
-                    helper.ReadCharacteristic(characteristic);
-                    Debug.Log(captions[0] + "/" + captions[1] + "/" + captions[2] + "/" + captions[3] + "/" + captions[4]);
-                }
-            }
-        }
-    }
-    
-    public void WriteInFile()
-    {
-        // Saving data in file
-        infoFileWriter.WriteLine(
-                //(SystemDateTime.Now.Ticks / SystemTimeSpan.TicksPerSecond) +
-                SystemDateTime.Now.ToString("dd-MM-yyyy hh:mm:ss.fff zzz") +
-                "," + captions[0] +
-                "," + captions[1] +
-                "," + captions[2] +
-                "," + captions[3]
-            );
-        infoFileWriter.Flush();
-        infoFile.Flush();
-        Debug.Log("Writing in file . . .");
-    }
-
     private void OnScanEnded(BluetoothHelper helper, LinkedList<BluetoothDevice> devices)
     {
         Debug.Log("OnScanEnded");
@@ -154,7 +164,7 @@ public class BluetoothManager : MonoBehaviour
             }
         }
 
-        foreach (int current in gameCharacteristics[game])
+        foreach (int current in gameCharacteristics[GameSettings.Game])
         {
             BluetoothHelperCharacteristic characteristic = new(characteristicUUIDs[current], serviceUUID);
             bluetoothHelperCharacteristics.Add(characteristic);
@@ -205,17 +215,20 @@ public class BluetoothManager : MonoBehaviour
         Debug.Log("OnDestroy");
 
         // Saving the file
-        infoFileWriter.Close();
-        infoFile.Close();
+        infoFileWriter?.Close();
+        infoFile?.Close();
         Debug.Log("End Writing in file, saving the file");
 
-        helper.OnScanEnded -= OnScanEnded;
-        helper.OnConnected -= OnConnected;
-        helper.OnConnectionFailed -= OnConnectionFailed;
-        helper.OnCharacteristicChanged -= OnCharacteristicChanged;
-        helper.OnCharacteristicNotFound -= OnCharacteristicNotFound;
-        helper.OnServiceNotFound -= OnServiceNotFound;
-        helper.Disconnect();
+        if (helper != null)
+        {
+            helper.OnScanEnded -= OnScanEnded;
+            helper.OnConnected -= OnConnected;
+            helper.OnConnectionFailed -= OnConnectionFailed;
+            helper.OnCharacteristicChanged -= OnCharacteristicChanged;
+            helper.OnCharacteristicNotFound -= OnCharacteristicNotFound;
+            helper.OnServiceNotFound -= OnServiceNotFound;
+            helper.Disconnect();
+        }
     }
 }
 

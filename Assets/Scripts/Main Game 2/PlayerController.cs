@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -43,21 +44,20 @@ public class PlayerController : MonoBehaviour
 
         spriteObject.GetComponent<SpriteRenderer>().sprite = sprites[Random.Range(0, sprites.Length)];
         healthSprite = healthObject.GetComponent<SpriteRenderer>();
-
-        bluetoothPlayer = GameObject.Find("BluetoothManager").GetComponent<BluetoothManager>();
+        StartCoroutine(WaitForBluetooth());
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (alive)
+        if (alive && bluetoothPlayer != null)
         {
             Move();
             bluetoothPlayer.WriteInFile();
         }
     }
 
-    void Move()
+    private void Move()
     {
         /*if (Input.GetKeyDown(KeyCode.D))
         {
@@ -93,6 +93,13 @@ public class PlayerController : MonoBehaviour
             currentColumn = 3;
         }
         transform.position = positions[currentColumn];
+    }
+    
+    private IEnumerator WaitForBluetooth()
+    {
+        yield return new WaitUntil(() => GameObject.Find("Bluetooth Manager") != null);
+        bluetoothPlayer = GameObject.Find("Bluetooth Manager").GetComponent<BluetoothManager>();
+        Debug.Log("bluetooth player is: " + bluetoothPlayer.ToString());
     }
 
     public bool Hurt()

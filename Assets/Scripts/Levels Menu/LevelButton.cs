@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class LevelButton : BaseButton
@@ -17,14 +18,21 @@ public class LevelButton : BaseButton
     public override void InteractAction()
     {
         GameSettings.Level = name;
-        GameObject bluetoothManager = GameObject.Find("BluetoothManager");
+        GameObject bluetoothManager = GameObject.Find("Bluetooth Manager");
         Destroy(bluetoothManager);
+
+        //StartCoroutine(DestroyAndEndScene(bluetoothManager));
+    }
+
+    private IEnumerator DestroyAndEndScene(GameObject bluetooth)
+    {
+        Destroy(bluetooth);
+        yield return new WaitForEndOfFrame();
 
         // in case this doesnt work make it a coroutine and add a delay after destroying the manager because thanks unity
         GameObject newBluetoothManager = new();
         BluetoothManager manager = newBluetoothManager.AddComponent<BluetoothManager>();
         Instantiate(newBluetoothManager);
-        manager.game = GameSettings.Game;
 
         StartCoroutine(SceneChanger.ChangeScene("Main Game " + GameSettings.Game));
     }
