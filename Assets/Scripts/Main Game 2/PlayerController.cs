@@ -8,6 +8,8 @@ using ArduinoBluetoothAPI;
 using UnityEngine.Android;
 using System.IO;
 using SystemDateTime = System.DateTime;
+using UnityEngine.Networking;
+using SystemException = System.Exception;
 
 public class PlayerController : MonoBehaviour
 {
@@ -16,6 +18,8 @@ public class PlayerController : MonoBehaviour
     public byte caption2 = 0;
     public byte caption3 = 0;
     public byte caption4 = 0;
+
+    public List<int[]> captionsList = new List<int[]>();
 
     private FileStream infoFile;
     private StreamWriter infoFileWriter;
@@ -43,6 +47,7 @@ public class PlayerController : MonoBehaviour
     private BluetoothHelperCharacteristic bluetoothHelperCharacteristicfx4;
     private BluetoothHelperCharacteristic bluetoothHelperCharacteristicfx5;
 
+    private static string PostRegistroFlex = "http://192.168.0.6/registroSesionFlex";
 
     private Vector3[] positions = {
         new(-GameSettings.Width / 2, -3.5f, -3),
@@ -117,6 +122,13 @@ public class PlayerController : MonoBehaviour
         infoFileWriter.WriteLine("timestamp,caption1,caption2,caption3,caption4");
         infoFileWriter.Flush();
         infoFile.Flush();
+
+        // Testing Data Send via web API
+        Debug.Log("Preparing and sending data to database");
+        captionsList.Add(new int[]{4, 4, 4, 4});
+        Debug.Log("Added register to list");
+        SendPostCaptionsList();
+        Debug.Log("Tried to send the Data to Database");
     }
 
     // Update is called once per frame
@@ -126,6 +138,7 @@ public class PlayerController : MonoBehaviour
         if (alive){
             Move();
             WriteInFile();
+            SaveCaptionsToList();
         }
         if (helper != null && bluetoothHelperCharacteristicfx5 != null){
             Debug.Log("");
@@ -204,6 +217,9 @@ public class PlayerController : MonoBehaviour
         infoFileWriter.Flush();
         infoFile.Flush();
         Debug.Log("Writing in file . . .");
+    }
+    public void SaveCaptionsToList(){
+        captionsList.Add(new int[]{caption1, caption2, caption3, caption4});
     }
 
     public bool Hurt()
@@ -307,6 +323,56 @@ public class PlayerController : MonoBehaviour
         Debug.Log("-Write");
     }
 */
+
+    void SendPostCaptionsList(){
+        StartCoroutine(PostRequest(PostRegistroFlex));
+    }
+
+    IEnumerator PostRequest(string uri){
+        foreach(int[] regCapt in captionsList){
+            string jsonData = "{" + 
+                "\"caption1\":" + regCapt[0] + "," +
+                "\"caption2\":" + regCapt[1] + "," +
+                "\"caption3\":" + regCapt[2] + "," +
+                "\"caption4\":" + regCapt[3] + "," +
+                "\"Sesion_idSesion\": 1" +
+                "}";
+            
+            Debug.Log("PostRequest: jsonData ready '" + jsonData + "'");
+            // Creating Web Request
+            UnityWebRequest webRequest = new UnityWebRequest(uri, "POST");
+            Debug.Log("Hello moto");
+            try{
+                Debug.Log("PostRequest: A 1");
+                byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(jsonData);
+                Debug.Log("PostRequest: A 2");
+                webRequest.uploadHandler = (UploadHandler)new UploadHandlerRaw(bodyRaw);
+                Debug.Log("PostRequest: A 3");
+                webRequest.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+                Debug.Log("PostRequest: A 4");
+                webRequest.SetRequestHeader("Content-Type", "application/json");
+
+                Debug.Log("PostRequest: Request configured");
+            }catch(SystemException ex){
+                Debug.Log("Catch ex: " + ex);
+            }
+            // Send Request
+            yield return webRequest.SendWebRequest();
+
+            // Check for errors
+            if (webRequest.result != UnityWebRequest.Result.Success)
+            {
+                Debug.LogError("Error sending POST request: " + webRequest.error);
+            }
+            else
+            {
+                Debug.Log("POST request sent successfully");
+                // Handle the response if needed
+                Debug.Log("Response: " + webRequest.downloadHandler.text);
+            }
+        }
+    }
+
     void OnDestroy()
     {
         Debug.Log("OnDestroy");
