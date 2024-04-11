@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class GameButton : BaseButton
@@ -18,6 +19,14 @@ public class GameButton : BaseButton
     {
         GameSettings.Game = name;
         GameSettings.Level = "1";
+        StartCoroutine(DestroyBluetoothAndChangeScene());
+    }
+
+    private IEnumerator DestroyBluetoothAndChangeScene()
+    {
+        GameObject bluetoothManager = GameObject.Find("Bluetooth Manager");
+        Destroy(bluetoothManager);
+        yield return new WaitForEndOfFrame();
         StartCoroutine(SceneChanger.ChangeScene("Levels Menu"));
     }
 }

@@ -18,8 +18,7 @@ public class LevelButton : BaseButton
     public override void InteractAction()
     {
         GameSettings.Level = name;
-        GameObject bluetoothManager = GameObject.Find("Bluetooth Manager");
-        Destroy(bluetoothManager);
+        StartCoroutine(SceneChanger.ChangeScene("Main Game " + GameSettings.Game));
 
         //StartCoroutine(DestroyAndEndScene(bluetoothManager));
     }
@@ -30,10 +29,5 @@ public class LevelButton : BaseButton
         yield return new WaitForEndOfFrame();
 
         // in case this doesnt work make it a coroutine and add a delay after destroying the manager because thanks unity
-        GameObject newBluetoothManager = new();
-        BluetoothManager manager = newBluetoothManager.AddComponent<BluetoothManager>();
-        Instantiate(newBluetoothManager);
-
-        StartCoroutine(SceneChanger.ChangeScene("Main Game " + GameSettings.Game));
     }
 }

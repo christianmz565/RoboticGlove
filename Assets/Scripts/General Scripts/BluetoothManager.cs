@@ -219,6 +219,9 @@ public class BluetoothManager : MonoBehaviour
         infoFile?.Close();
         Debug.Log("End Writing in file, saving the file");
 
+        Debug.Log("Destroying the instance");
+        instance = null;
+
         if (helper != null)
         {
             helper.OnScanEnded -= OnScanEnded;
