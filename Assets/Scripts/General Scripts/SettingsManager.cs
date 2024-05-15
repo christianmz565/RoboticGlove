@@ -25,6 +25,7 @@ public class SettingsManager : MonoBehaviour
         bool fullscreen = PlayerPrefs.GetInt("fullscreen", 1) == 1;
         Vector2 resolution = resolutionsList[resolutionIndex];
         Screen.SetResolution((int)resolution.x, (int)resolution.y, fullscreen);
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
         //GameObject.Find("Canvas").GetComponent<CanvasScaler>().referenceResolution = new Vector2(0, resolution.y);
         // do something with volume
     }

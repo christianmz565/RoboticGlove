@@ -41,12 +41,7 @@ public class PlayerController : MonoBehaviour
     private BluetoothHelper helper;
     private static string serviceUUID = "4f7c0630-0059-408d-9acd-e04553c7b60a";
     private static string characteristicUUIDfx5 = "4f7c0635-0059-408d-9acd-e04553c7b60a";
-    private BluetoothHelperCharacteristic bluetoothHelperCharacteristicfx1;
-    private BluetoothHelperCharacteristic bluetoothHelperCharacteristicfx2;
-    private BluetoothHelperCharacteristic bluetoothHelperCharacteristicfx3;
-    private BluetoothHelperCharacteristic bluetoothHelperCharacteristicfx4;
     private BluetoothHelperCharacteristic bluetoothHelperCharacteristicfx5;
-
     private static string PostRegistroFlex = "http://192.168.0.6/registroSesionFlex";
 
     private Vector3[] positions = {
@@ -143,11 +138,6 @@ public class PlayerController : MonoBehaviour
         if (helper != null && bluetoothHelperCharacteristicfx5 != null){
             Debug.Log("");
             helper.ReadCharacteristic(bluetoothHelperCharacteristicfx5);
-            /*
-            helper.ReadCharacteristic(bluetoothHelperCharacteristicfx2);
-            helper.ReadCharacteristic(bluetoothHelperCharacteristicfx3);
-            helper.ReadCharacteristic(bluetoothHelperCharacteristicfx4);
-            */
             Debug.Log(caption1 + " / " + caption2 + " / " + caption3 + " / " + caption4 + " CC: " + currentColumn);
         }
         // remove this

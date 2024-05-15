@@ -1402,6 +1402,37 @@ MonoBehaviour:
   - {fileID: 21300000, guid: c7825510d91db8644922df8f0416ad16, type: 3}
   - {fileID: 21300000, guid: 13b3799a2af443e4aa41cd1380378e20, type: 3}
   - {fileID: 21300000, guid: 8a3dc5021e9fe3a44813ef25cdcc1d5d, type: 3}
+--- !u!1 &1179985489
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1179985490}
+  m_Layer: 0
+  m_Name: c
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1179985490
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1179985489}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 9.11, y: 3.8, z: -10.011157}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1203644183
 GameObject:
   m_ObjectHideFlags: 0
@@ -1878,6 +1909,13 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 1c71622f51f882a4f8aef81590f24126, type: 3}
   - {fileID: 21300000, guid: 16e9e32b10b874c4aa1d21ade4a4f185, type: 3}
   nodeGrid: {fileID: 282046045}
+  ejex: 0
+  ejey: 0
+  caption1: 0
+  caption2: 0
+  caption3: 0
+  caption4: 0
+  caption5: 0
 --- !u!82 &1434487565
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2485,3 +2523,4 @@ SceneRoots:
   - {fileID: 2107395549}
   - {fileID: 1932933478}
   - {fileID: 510821229}
+  - {fileID: 1179985490}
