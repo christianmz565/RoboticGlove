@@ -4,41 +4,41 @@ using UnityEngine;
 using UnityEngine.Android;
 using System.IO;
 using SystemDateTime = System.DateTime;
+using UnityEngine.Networking;
+using System.Collections;
+using SystemException = System.Exception;
 
 public class BluetoothManager : MonoBehaviour
 {
     public byte[] captions = new byte[4];
     public string game;
     private BluetoothHelper helper;
-    private Dictionary<string, int[]> gameCharacteristics = new()
-    {
-        { "1", new int[] { 0, 1, 2, 3, 4 }},
-        { "2", new int[] { 4 }}
-    };
-    private const string serviceUUID = "4f7c0630-0059-408d-9acd-e04553c7b60a";
-    private string[] characteristicUUIDs = new string[]
-    {
-        "4f7c0631-0059-408d-9acd-e04553c7b60a",
-        "4f7c0632-0059-408d-9acd-e04553c7b60a",
-        "4f7c0633-0059-408d-9acd-e04553c7b60a",
-        "4f7c0634-0059-408d-9acd-e04553c7b60a",
-        "4f7c0635-0059-408d-9acd-e04553c7b60a"
-    };
-    private List<BluetoothHelperCharacteristic> bluetoothHelperCharacteristics = new();
+    private const string serviceUUIDG1 = "fda4e100-3e30-4182-b66c-cf08e4779ab6";
+    private const string characteristicUUIDG1 = "fda4e108-3e30-4182-b66c-cf08e4779ab6";
+    private const string serviceUUIDG2 = "4f7c0630-0059-408d-9acd-e04553c7b60a";
+    private const string characteristicUUIDG2 = "4f7c0635-0059-408d-9acd-e04553c7b60a";
+    private BluetoothHelperCharacteristic bluetoothHelperCharacteristic;
+    private static BluetoothManager instance;
+    public byte ejex = 0, ejey = 0, caption1 = 5, caption2 = 50, caption3 = 10, caption4 = 75, caption5 = 0;
+    // Archivos
+    public List<int[]> captionsList = new();
     private FileStream infoFile;
     private StreamWriter infoFileWriter;
-    private static BluetoothManager instance;
+    private static string PostRegistroFlex = "http://192.168.0.6/registroSesionForce";
+
 
     void Start()
     {
         if (instance != null && instance != this)
         {
             Destroy(gameObject);
+            Debug.Log("not me");
         }
         else
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
+            Debug.Log("me");
         }
 
 
@@ -98,33 +98,102 @@ public class BluetoothManager : MonoBehaviour
         infoFileWriter.WriteLine("timestamp,caption1,caption2,caption3,caption4");
         infoFileWriter.Flush();
         infoFile.Flush();
+
+        Debug.Log("Preparing and sending data to database");
+        captionsList.Add(new int[] { 4, 4, 4, 4, 4, 4, 4 });
+        Debug.Log("Added register to list");
+        SendPostCaptionsList();
+        Debug.Log("Tried to send the Data to Database");
+    }
+
+    void SendPostCaptionsList()
+    {
+        StartCoroutine(PostRequest(PostRegistroFlex));
+    }
+
+    private IEnumerator PostRequest(string uri)
+    {
+        foreach (int[] regCapt in captionsList)
+        {
+            string jsonData = "{" +
+                "\"ejex\":" + regCapt[0] + "," +
+                "\"ejey\":" + regCapt[1] + "," +
+                "\"caption1\":" + regCapt[2] + "," +
+                "\"caption2\":" + regCapt[3] + "," +
+                "\"caption3\":" + regCapt[4] + "," +
+                "\"caption4\":" + regCapt[5] + "," +
+                "\"caption5\":" + regCapt[6] + "," +
+                "\"Sesion_idSesion\": 1" +
+                "}";
+
+            Debug.Log("PostRequest: jsonData ready '" + jsonData + "'");
+            // Creating Web Request
+            UnityWebRequest webRequest = new UnityWebRequest(uri, "POST");
+            Debug.Log("Hello moto");
+            try
+            {
+                Debug.Log("PostRequest: A 1");
+                byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(jsonData);
+                Debug.Log("PostRequest: A 2");
+                webRequest.uploadHandler = (UploadHandler)new UploadHandlerRaw(bodyRaw);
+                Debug.Log("PostRequest: A 3");
+                webRequest.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+                Debug.Log("PostRequest: A 4");
+                webRequest.SetRequestHeader("Content-Type", "application/json");
+
+                Debug.Log("PostRequest: Request configured");
+            }
+            catch (SystemException ex)
+            {
+                Debug.Log("Catch ex: " + ex);
+            }
+            // Send Request
+            yield return webRequest.SendWebRequest();
+
+            // Check for errors
+            if (webRequest.result != UnityWebRequest.Result.Success)
+            {
+                Debug.LogError("Error sending POST request: " + webRequest.error);
+            }
+            else
+            {
+                Debug.Log("POST request sent successfully");
+                // Handle the response if needed
+                Debug.Log("Response: " + webRequest.downloadHandler.text);
+            }
+        }
     }
 
     public void Update()
     {
-        if (helper != null)
+        WriteInFile();
+        SaveCaptionsToList();
+        if (helper != null && bluetoothHelperCharacteristic != null)
         {
-            foreach (BluetoothHelperCharacteristic characteristic in bluetoothHelperCharacteristics)
-            {
-                if (characteristic != null)
-                {
-                    helper.ReadCharacteristic(characteristic);
-                    Debug.Log(captions[0] + "/" + captions[1] + "/" + captions[2] + "/" + captions[3] + "/" + captions[4]);
-                }
-            }
+            Debug.Log("");
+            helper.ReadCharacteristic(bluetoothHelperCharacteristic);
+            Debug.Log(ejex + " / " + ejey + " / " + caption1 + " / " + caption2 + " / " + caption3 + " / " + caption4 + " / " + caption5);
         }
     }
-    
+
+    public void SaveCaptionsToList()
+    {
+        captionsList.Add(new int[] { ejex, ejey, caption1, caption2, caption3, caption4, caption5 });
+    }
+
     public void WriteInFile()
     {
         // Saving data in file
         infoFileWriter.WriteLine(
                 //(SystemDateTime.Now.Ticks / SystemTimeSpan.TicksPerSecond) +
                 SystemDateTime.Now.ToString("dd-MM-yyyy hh:mm:ss.fff zzz") +
-                "," + captions[0] +
-                "," + captions[1] +
-                "," + captions[2] +
-                "," + captions[3]
+                "," + ejex +
+                "," + ejey +
+                "," + caption1 +
+                "," + caption2 +
+                "," + caption3 +
+                "," + caption4 +
+                "," + caption5
             );
         infoFileWriter.Flush();
         infoFile.Flush();
@@ -153,12 +222,12 @@ public class BluetoothManager : MonoBehaviour
                 Debug.Log($"Characteristic : [{c.getName()}]");
             }
         }
-
-        foreach (int current in gameCharacteristics[game])
-        {
-            BluetoothHelperCharacteristic characteristic = new(characteristicUUIDs[current], serviceUUID);
-            bluetoothHelperCharacteristics.Add(characteristic);
-        }
+        if (game.Equals("1"))
+            bluetoothHelperCharacteristic = new BluetoothHelperCharacteristic(characteristicUUIDG1, serviceUUIDG1);
+        else
+            bluetoothHelperCharacteristic = new BluetoothHelperCharacteristic(characteristicUUIDG2, serviceUUIDG2);
+        helper.Subscribe(bluetoothHelperCharacteristic);
+        Debug.Log("Si nos logramos conectar y suscribir");
     }
 
     private void OnConnectionFailed(BluetoothHelper helper)
@@ -170,13 +239,65 @@ public class BluetoothManager : MonoBehaviour
 
     private void OnCharacteristicChanged(BluetoothHelper helper, byte[] data, BluetoothHelperCharacteristic characteristic)
     {
-        //Debug.Log($"Update valud for characteristic [{characteristic.getName()}] of service [{characteristic.getService()}]");
-        //Debug.Log($"New value : [{System.Text.Encoding.ASCII.GetString(data)}]");
-        //caption = System.Text.Encoding.ASCII.GetString(data);
-
-        // no dire absolutamente nada sobre el bucle que habia aqui
-        for (int i = 0; i < data.Length; i++)
-            captions[i] = data[i];
+        int i = 0;
+        if (game.Equals("1"))
+        {
+            foreach (byte b in data)
+            {
+                if (i == 0)
+                {
+                    ejey = b;
+                }
+                else if (i == 1)
+                {
+                    ejex = b;
+                }
+                else if (i == 2)
+                {
+                    caption1 = b;
+                }
+                else if (i == 3)
+                {
+                    caption2 = b;
+                }
+                else if (i == 4)
+                {
+                    caption3 = b;
+                }
+                else if (i == 5)
+                {
+                    caption4 = b;
+                }
+                else if (i == 6)
+                {
+                    caption5 = b;
+                }
+                i++;
+            }
+        }
+        else
+        {
+            foreach (byte b in data)
+            {
+                if (i == 0)
+                {
+                    caption1 = b;
+                }
+                else if (i == 1)
+                {
+                    caption2 = b;
+                }
+                else if (i == 2)
+                {
+                    caption3 = b;
+                }
+                else if (i == 3)
+                {
+                    caption4 = b;
+                }
+                i++;
+            }
+        }
     }
 
     private void OnServiceNotFound(BluetoothHelper helper, string service)
