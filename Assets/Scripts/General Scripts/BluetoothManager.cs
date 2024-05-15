@@ -18,7 +18,7 @@ public class BluetoothManager : MonoBehaviour
     private const string serviceUUIDG2 = "4f7c0630-0059-408d-9acd-e04553c7b60a";
     private const string characteristicUUIDG2 = "4f7c0635-0059-408d-9acd-e04553c7b60a";
     private BluetoothHelperCharacteristic bluetoothHelperCharacteristic;
-    private static BluetoothManager instance;
+    public static BluetoothManager instance;
     public byte ejex = 0, ejey = 0, caption1 = 5, caption2 = 50, caption3 = 10, caption4 = 75, caption5 = 0;
     // Archivos
     public List<int[]> captionsList = new();
@@ -32,13 +32,13 @@ public class BluetoothManager : MonoBehaviour
         if (instance != null && instance != this)
         {
             Destroy(gameObject);
-            Debug.Log("not me");
+            Debug.Log("removing this instance of ble man " + gameObject.name);
         }
         else
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
-            Debug.Log("me");
+            Debug.Log("keeping this instance of ble man " + gameObject.name);
         }
 
 
@@ -197,7 +197,7 @@ public class BluetoothManager : MonoBehaviour
             );
         infoFileWriter.Flush();
         infoFile.Flush();
-        Debug.Log("Writing in file . . .");
+        //Debug.Log("Writing in file . . .");
     }
 
     private void OnScanEnded(BluetoothHelper helper, LinkedList<BluetoothDevice> devices)

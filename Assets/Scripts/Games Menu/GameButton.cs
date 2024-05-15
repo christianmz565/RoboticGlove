@@ -26,13 +26,16 @@ public class GameButton : BaseButton
     {
         GameObject bluetoothManager = GameObject.Find("BluetoothManager");
         Destroy(bluetoothManager);
+        BluetoothManager.instance = null;
         yield return new WaitForEndOfFrame();
         yield return new WaitForEndOfFrame();
 
         // in case this doesnt work make it a coroutine and add a delay after destroying the manager because thanks unity
-        GameObject newBluetoothManager = new();
-        BluetoothManager manager = newBluetoothManager.AddComponent<BluetoothManager>();
-        Instantiate(newBluetoothManager);
+        GameObject instNewBluetoothManager = Instantiate(new GameObject());
+        instNewBluetoothManager.name = "BluetoothManager";
+        BluetoothManager manager = instNewBluetoothManager.AddComponent<BluetoothManager>();
+        BluetoothManager.instance = manager;
+        DontDestroyOnLoad(instNewBluetoothManager);
         manager.game = GameSettings.Game;
         StartCoroutine(SceneChanger.ChangeScene("Levels Menu"));
     }
