@@ -3,13 +3,17 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using System.Reflection;
 using ArduinoBluetoothAPI;
 using UnityEngine.Android;
+using System.IO;
+using SystemDateTime = System.DateTime;
+using UnityEngine.Networking;
+using SystemException = System.Exception;
 
 public class PlayerController : MonoBehaviour
 {
-    public float score = 0;
-    public string caption = "";
+    public float score = 0; 
     public int currentColumn;
     public bool alive = true;
     [SerializeField] private Text scoreText;
@@ -20,13 +24,10 @@ public class PlayerController : MonoBehaviour
     private float basePitch;
     private AudioSource carAudio;
     private ParticleSystem smoke;
+    //private float baseCooldown = 1;
+    //private float cooldown = 1;
     private ParticleSystem.EmissionModule emission;
-    //Bluethoot Variables
-    private BluetoothHelper helper;
-    private static string serviceUUID = "4f7c0630-0059-408d-9acd-e04553c7b60a";
-    private static string characteristicUUIDfxMiddle = "4f7c0632-0059-408d-9acd-e04553c7b60";
-    private BluetoothHelperCharacteristic bluetoothHelperCharacteristic;
-
+    private BluetoothManager bluetoothManager;
     private Vector3[] positions = {
         new(-GameSettings.Width / 2, -3.5f, -3),
         new(-GameSettings.Width / 2 + GameSettings.Width / 3, -3.5f, -3),
@@ -37,39 +38,24 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Log("Game started");
+        bluetoothManager = GameObject.Find("BluetoothManager").GetComponent<BluetoothManager>();
         smoke = GetComponentInChildren<ParticleSystem>();
         emission = smoke.emission;
         carAudio = GetComponent<AudioSource>();
         basePitch = carAudio.pitch;
         carAudio.volume = PlayerPrefs.GetInt("volume") / 100.0f;
         GetComponentInChildren<SpriteRenderer>().sprite = sprites[Random.Range(0, sprites.Length)];
-
-        //Bluethoot Configuration
-        BluetoothHelper.BLE = true;
-        helper = BluetoothHelper.GetInstance("Papita - Soft Robotic Glove");
-        helper.OnScanEnded += OnScanEnded;
-        helper.OnConnected += OnConnected;
-        helper.OnConnectionFailed += OnConnectionFailed;
-        helper.OnCharacteristicChanged += OnCharacteristicChanged;
-        helper.OnCharacteristicNotFound += OnCharacteristicNotFound;
-        helper.OnServiceNotFound += OnServiceNotFound;
-        helper.OnCharacteristicChanged += (helper, value, characteristic) =>
-        {
-            caption = Encoding.Unicode.GetString(value);
-        };
-        helper.ScanNearbyDevices();
-
-        Permission.RequestUserPermission(Permission.CoarseLocation);
-        bluetoothHelperCharacteristic = new BluetoothHelperCharacteristic(characteristicUUIDfxMiddle, serviceUUID);
-        helper.ReadCharacteristic(bluetoothHelperCharacteristic);
     }
 
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(" UPDATE ");
         if (alive)
+        {
             Move();
-
+        }
         // remove this
         if (Input.GetKeyDown(KeyCode.F7))
             Time.timeScale = 2.5f;
@@ -77,6 +63,7 @@ public class PlayerController : MonoBehaviour
 
     void Move()
     {
+        /*
         if (Input.GetKeyDown(KeyCode.D))
         {
             currentColumn = 0;
@@ -93,88 +80,63 @@ public class PlayerController : MonoBehaviour
         {
             currentColumn = 3;
         }
+        */
+        
+        if (bluetoothManager.caption1 > 27)
+        {
+            currentColumn = 0;
+        }
+        else if (bluetoothManager.caption2 > 45)
+        {
+            currentColumn = 1;
+        }
+        else if (bluetoothManager.caption3 > 80)
+        {
+            currentColumn = 2;
+        }
+        else if (bluetoothManager.caption4 > 61)
+        {
+            currentColumn = 3;
+        }
 
         transform.position = positions[currentColumn];
+
+        /*
+        cooldown -= Time.deltaTime;
+        if (cooldown <= 0 && int.Parse(strBytesAct) > 80){
+            if (currentColumn == 3)
+                currentColumn = 0;
+            else
+                currentColumn++;
+            cooldown = baseCooldown;
+        }
+        transform.position = positions[currentColumn];
+        */
     }
 
     public bool Hurt()
     {
+        Debug.Log("Hurt");
         health--;
         if (health <= 0)
         {
             alive = false;
             GameSettings.ScrollSpeed = 0;
+            Debug.Log("-HurtTrue");
             return true;
         }
         emission.rateOverTime = MAX_SMOKE / health;
         carAudio.pitch = basePitch - (5 - health) * 0.1f;
         smoke.Play();
+        Debug.Log("-HurtFalse");
         return false;
     }
 
     public void Score(float points)
     {
+        Debug.Log("Score");
         score += points;
-        scoreText.text = "Puntaje\n" + score + "Caption: " + caption;
-    }
-
-    void OnScanEnded(BluetoothHelper helper, LinkedList<BluetoothDevice> devices)
-    {
-        if (helper.isDevicePaired())
-            helper.Connect();
-        else
-            helper.ScanNearbyDevices();
-    }
-
-    void OnConnected(BluetoothHelper helper)
-    {
-        List<BluetoothHelperService> services = helper.getGattServices();
-        foreach (BluetoothHelperService s in services)
-        {
-            Debug.Log($"Service : [{s.getName()}]");
-            foreach (BluetoothHelperCharacteristic c in s.getCharacteristics())
-            {
-                Debug.Log($"Characteristic : [{c.getName()}]");
-            }
-        }
-        helper.Subscribe(bluetoothHelperCharacteristic);
-    }
-
-    void OnConnectionFailed(BluetoothHelper helper)
-    {
-        Debug.Log("Connection failed");
-        helper.ScanNearbyDevices();
-    }
-
-    void OnCharacteristicChanged(BluetoothHelper helper, byte[] data, BluetoothHelperCharacteristic characteristic)
-    {
-        Debug.Log($"Update valud for characteristic [{characteristic.getName()}] of service [{characteristic.getService()}]");
-        Debug.Log($"New value : [{System.Text.Encoding.ASCII.GetString(data)}]");
-    }
-
-    void OnServiceNotFound(BluetoothHelper helper, string service)
-    {
-        Debug.Log($"Service [{service}] not found");
-    }
-
-    void OnCharacteristicNotFound(BluetoothHelper helper, string service, string characteristic)
-    {
-        Debug.Log($"Characteristic [{service}] of service [{service}] not found");
-    }
-
-    public void Write(string data)
-    {
-        helper.WriteCharacteristic(bluetoothHelperCharacteristic, data);
-    }
-
-    void OnDestroy()
-    {
-        helper.OnScanEnded -= OnScanEnded;
-        helper.OnConnected -= OnConnected;
-        helper.OnConnectionFailed -= OnConnectionFailed;
-        helper.OnCharacteristicChanged -= OnCharacteristicChanged;
-        helper.OnCharacteristicNotFound -= OnCharacteristicNotFound;
-        helper.OnServiceNotFound -= OnServiceNotFound;
-        helper.Disconnect();
+        scoreText.text = "Puntaje\n" + score;
+        Debug.Log("-Score");
     }
 }

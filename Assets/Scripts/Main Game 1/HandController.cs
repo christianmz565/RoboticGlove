@@ -1,5 +1,4 @@
 using UnityEngine;
-
 public class HandController : MonoBehaviour
 {
     [SerializeField] private Sprite[] sprites;
@@ -8,14 +7,14 @@ public class HandController : MonoBehaviour
     private NodeController pickedNode;
     private Vector2 previousNodePos;
     private bool isHolding = false;
+    private BluetoothManager bluetoothManager;
 
-    // Start is called before the first frame update
     void Start()
     {
+        bluetoothManager = GameObject.Find("BluetoothManager").GetComponent<BluetoothManager>();
         pullAudio = GetComponent<AudioSource>();
         pullAudio.volume = PlayerPrefs.GetInt("volume") / 100.0f;
     }
-
 
     // Update is called once per frame
     void Update()
@@ -25,23 +24,22 @@ public class HandController : MonoBehaviour
 
     void Check()
     {
-        float mult = 10 * Mathf.Pow(0.9f, PlayerPrefs.GetInt("cursorSensitivity"));
+        float mult = 5 * Mathf.Pow(0.9f, PlayerPrefs.GetInt("cursorSensitivity"));
         Vector2 direction = Vector2.zero;
 
-        if (Input.GetKey(KeyCode.LeftArrow))
+        if (bluetoothManager.ejex < 60)
             direction += Vector2.left;
-        if (Input.GetKey(KeyCode.UpArrow))
-            direction += Vector2.up;
-        if (Input.GetKey(KeyCode.DownArrow))
-            direction += Vector2.down;
-        if (Input.GetKey(KeyCode.RightArrow))
+        if (bluetoothManager.ejex > 200)
             direction += Vector2.right;
+        if (bluetoothManager.ejey < 60)
+            direction += Vector2.down;
+        if (bluetoothManager.ejey > 220)
+            direction += Vector2.up;
 
-        MoveAndPlayAudio(direction * Time.deltaTime * mult);
-
-        if (Input.GetKeyDown(KeyCode.Space))
+        MoveAndPlayAudio(mult * Time.deltaTime * direction);
+        if (!isHolding && bluetoothManager.caption1 > 8 && bluetoothManager.caption2 > 90 && bluetoothManager.caption3 > 15 && bluetoothManager.caption4 > 140)
             StartHold();
-        if (Input.GetKeyUp(KeyCode.Space))
+        if (isHolding && bluetoothManager.caption1 < 3 && bluetoothManager.caption2 < 30 && bluetoothManager.caption3 < 5 && bluetoothManager.caption4 < 40)
             EndHold();
     }
 
@@ -57,7 +55,10 @@ public class HandController : MonoBehaviour
             pullAudio.Play();
         }
 
-        transform.Translate(direction);
+        float x = transform.position.x + direction.x;
+        float y = transform.position.y + direction.y;
+        if (-9 < x && x < 9 && -4 < y && y < 4)
+            transform.Translate(direction);
     }
 
     void StartHold()
@@ -71,6 +72,7 @@ public class HandController : MonoBehaviour
             node.StartHold();
             pickedNode = node;
             GetComponent<SpriteRenderer>().sprite = sprites[0];
+            Debug.Log("Now holding " + node.name);
         }
     }
 
@@ -78,12 +80,15 @@ public class HandController : MonoBehaviour
     {
         if (isHolding)
         {
+            Debug.Log("Now holding (not) " + pickedNode.name);
             isHolding = false;
             pickedNode.EndHold();
             Vector2 newNodePos = nodeGrid.RealToRelativePosition(new Vector2(transform.position.x, transform.position.y));
             nodeGrid.MoveNode(pickedNode, previousNodePos, newNodePos);
             pickedNode = null;
             GetComponent<SpriteRenderer>().sprite = sprites[1];
+
         }
     }
+
 }
